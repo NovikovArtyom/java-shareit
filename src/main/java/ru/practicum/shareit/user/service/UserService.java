@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.service;
 
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.user.dto.UpdatedUserDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -27,6 +28,16 @@ public class UserService {
     }
 
     public UserDto createUser(UserDto userDto) {
-        User createdUser = UserMapper.toUserEntity(repository.createUser());
+        User createdUser = repository.createUser(UserMapper.fromUserDtoToUserEntity(userDto));
+        return UserMapper.toUserDto(createdUser);
+    }
+
+    public UserDto updateUser(Long userId, UpdatedUserDto updatedUserDto) {
+        User updatedUser = repository.updateUser(userId, UserMapper.fromUpdatedUserDtoToUserEntity(updatedUserDto));
+        return UserMapper.toUserDto(updatedUser);
+    }
+
+    public void deleteUser(Long userId) {
+        repository.deleteUser(userId);
     }
 }
