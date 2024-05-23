@@ -8,18 +8,30 @@ public class ItemMapper {
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
-                item.isAvailable(),
+                item.getAvailable(),
+                item.getOwner(),
                 item.getRequest()
         );
     }
 
-    public static Item toItemEntity(ItemDto itemDto) {
+    public static Item fromUpdatedItemDtoToItemEntity(UpdatedItemDto updatedItemDto) {
+        return new Item(
+                updatedItemDto.getId(),
+                updatedItemDto.getName(),
+                updatedItemDto.getDescription(),
+                updatedItemDto.getAvailable(),
+                null,
+                null
+        );
+    }
+
+    public static Item fromItemDtoToItemEntity(ItemDto itemDto) {
         return new Item(
                 itemDto.getId(),
                 itemDto.getName(),
                 itemDto.getDescription(),
-                itemDto.isAvailable(),
-                null,
+                itemDto.getAvailable(),
+                itemDto.getOwner(),
                 itemDto.getRequest()
         );
     }

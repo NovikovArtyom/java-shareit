@@ -24,4 +24,16 @@ public class ExceptionController {
     public ErrorResponse handle(final DuplicateEmailException e) {
         return new ErrorResponse("error: ", "Пользователь с данным email уже зарегистрирован");
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handle(final UserAccessException e) {
+        return new ErrorResponse("error: ", "Проблема с доступом к выполняемому действию!");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handle(final ItemNotFoundException e) {
+        return new ErrorResponse("error: ", "Данная вещь не зарегистрирована!");
+    }
 }
