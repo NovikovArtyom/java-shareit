@@ -1,41 +1,60 @@
 package ru.practicum.shareit.user.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.DuplicateEmailException;
+import ru.practicum.shareit.exception.DuplicateUserException;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UpdatedUserDto;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapper;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.List;
 
 
 @Service
-public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository repository;
+public class UserServiceImpl implements ru.practicum.shareit.user.service.UserService {
 
-    public Collection<UserDto> getAllUsers() {
-        return repository.getAllUsers().stream().map(UserMapper::toUserDto).collect(Collectors.toList());
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository repository) {
+        this.userRepository = repository;
     }
 
-    public UserDto getUserById(Long userId) {
-        return UserMapper.toUserDto(repository.getUserById(userId));
+    public List<UserEntity> getAllUsers() {
+        return userRepository.findAll();
     }
 
-    public UserDto createUser(UserDto userDto) {
-        User createdUser = repository.createUser(UserMapper.fromUserDtoToUserEntity(userDto));
-        return UserMapper.toUserDto(createdUser);
+    public UserEntity getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден!"));
     }
 
-    public UserDto updateUser(Long userId, UpdatedUserDto updatedUserDto) {
-        User updatedUser = repository.updateUser(userId, UserMapper.fromUpdatedUserDtoToUserEntity(updatedUserDto));
-        return UserMapper.toUserDto(updatedUser);
+    public UserEntity createUser(UserEntity user) {
+        if (!userRepository.existsByEmail(user.getEmail())) {
+            return userRepository.save(user);
+        } else {
+            throw new DuplicateUserException("Данный пользователь уже зарегистрирован!");
+        }
+    }
+
+    public UserEntity updateUser(Long userId, UpdatedUserDto updatedUserDto) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(() ->
+                new UserNotFoundException("Обновляемый пользователь не найден!"));
+        if (updatedUserDto.getEmail() != null) {
+            Boolean duplicateEmail = userRepository.existsByEmail(updatedUserDto.getEmail());
+            UserEntity userDuplicateEmail = userRepository.findByEmail(updatedUserDto.getEmail());
+            if (!duplicateEmail || userDuplicateEmail == user) {
+                user.setEmail(updatedUserDto.getEmail());
+            } else {
+                throw new DuplicateEmailException("Данный email занят!");
+            }
+        }
+        if (updatedUserDto.getName() != null) {
+            user.setName(updatedUserDto.getName());
+        }
+        return userRepository.save(user);
     }
 
     public void deleteUser(Long userId) {
-        repository.deleteUser(userId);
+        userRepository.deleteById(userId);
     }
 }
