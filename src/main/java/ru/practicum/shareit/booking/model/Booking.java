@@ -2,8 +2,8 @@ package ru.practicum.shareit.booking.model;
 
 import lombok.Data;
 import lombok.NonNull;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.item.model.ItemEntity;
+import ru.practicum.shareit.user.model.UserEntity;
 
 import java.time.LocalDateTime;
 
@@ -18,9 +18,9 @@ public class Booking {
     @NonNull
     private LocalDateTime end;
     @NonNull
-    private Item item;
+    private ItemEntity item;
     @NonNull
-    private User booker;
+    private UserEntity booker;
     @NonNull
     private BookingStatus status;
 }
