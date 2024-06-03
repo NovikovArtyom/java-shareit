@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.model.UserEntity;
 
 import javax.validation.constraints.NotBlank;
 
@@ -23,6 +23,6 @@ public class ItemDto {
     private String description;
     @NonNull
     private Boolean available;
-    private User owner;
+    private UserEntity owner;
     private ItemRequest request;
 }
