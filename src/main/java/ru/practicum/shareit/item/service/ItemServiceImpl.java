@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserAccessException;
 import ru.practicum.shareit.item.dto.UpdatedItemDto;
@@ -22,30 +24,39 @@ public class ItemServiceImpl implements ItemService {
         this.userService = userService;
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public List<ItemEntity> getAllItems(Long userId) {
         userService.getUserById(userId);
         return itemRepository.findAllByOwner_Id(userId);
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public ItemEntity getItemById(Long itemId) {
         return itemRepository.findById(itemId).orElseThrow(() ->
                 new ItemNotFoundException(String.format("Вещь c id = %d не зарегистрирован!", itemId)));
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public List<ItemEntity> search(String text) {
-        if (text.isEmpty()) {
-            return new ArrayList<>();
-        } else {
+        if (!text.equals("")) {
             return itemRepository.search(text);
+        } else {
+            return new ArrayList<>();
         }
     }
 
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ItemEntity addItem(Long userId, ItemEntity item) {
         item.setOwner(userService.getUserById(userId));
         return itemRepository.save(item);
     }
 
-
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ItemEntity updateItem(Long userId, Long itemId, UpdatedItemDto updatedItemDto) {
         UserEntity user = userService.getUserById(userId);
         ItemEntity item = itemRepository.findById(itemId).orElseThrow(() ->
