@@ -28,4 +28,10 @@ public class UserMapper {
                 updatedUserDto.getEmail()
         );
     }
+
+    public static UserResponseDto toUserResponseDto(UserEntity userEntity) {
+        return new UserResponseDto(
+                userEntity.getId()
+        );
+    }
 }

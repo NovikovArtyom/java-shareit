@@ -39,4 +39,11 @@ public class ItemMapper {
                 null
         );
     }
+
+    public static ItemResponseDto toItemResponseDto(ItemEntity item) {
+        return new ItemResponseDto(
+                item.getId(),
+                item.getName()
+        );
+    }
 }

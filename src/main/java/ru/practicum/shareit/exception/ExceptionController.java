@@ -64,4 +64,11 @@ public class ExceptionController {
         log.error("Указаный параметр state некорректен!");
         return new ErrorResponse("error: ", "Указаный параметр state некорректен!");
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final ItemNotAvailableException e) {
+        log.error("Данный товар уже забронирован!");
+        return new ErrorResponse("error: ", "Данный товар уже забронирован!");
+    }
 }

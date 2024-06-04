@@ -2,17 +2,19 @@ package ru.practicum.shareit.booking.dto;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.booking.model.BookingEntity;
+import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.user.dto.UserMapper;
 
 @UtilityClass
 public class BookingMapper {
 
-    public static BookingDto toBookingDto(BookingEntity bookingEntity) {
-        return new BookingDto(
+    public static BookingResponseDto toBookingDto(BookingEntity bookingEntity) {
+        return new BookingResponseDto(
                 bookingEntity.getId(),
                 bookingEntity.getStart(),
                 bookingEntity.getEnd(),
-                bookingEntity.getItem().getId(),
-                bookingEntity.getBooker().getId(),
+                ItemMapper.toItemResponseDto(bookingEntity.getItem()),
+                UserMapper.toUserResponseDto(bookingEntity.getBooker()),
                 bookingEntity.getStatus()
         );
     }

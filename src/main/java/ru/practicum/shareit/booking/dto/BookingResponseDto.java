@@ -4,21 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.model.ItemEntity;
-import ru.practicum.shareit.user.model.UserEntity;
+import ru.practicum.shareit.item.dto.ItemResponseDto;
+import ru.practicum.shareit.user.dto.UserResponseDto;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
 @Data
-public class BookingDto {
+@AllArgsConstructor
+public class BookingResponseDto {
     private Long id;
     @NonNull
     private LocalDateTime start;
     @NonNull
     private LocalDateTime end;
     @NonNull
-    private Long itemId;
-    private Long bookerId;
+    private ItemResponseDto item;
+    private UserResponseDto booker;
     private BookingStatus status;
 }

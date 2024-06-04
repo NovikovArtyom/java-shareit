@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
-    Optional<BookingEntity> findByIdAndBooker_IdOrItem_Owner_Id(Long bookingId, Long bookerId, Long userId);
 
     List<BookingEntity> findAllByBooker_IdOrderByStart(Long bookerId);
 

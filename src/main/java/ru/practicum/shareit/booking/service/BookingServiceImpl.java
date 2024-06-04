@@ -6,18 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.exception.BookingNotFoundException;
-import ru.practicum.shareit.exception.IncorrectDateException;
-import ru.practicum.shareit.exception.IncorrectStateException;
-import ru.practicum.shareit.exception.UserAccessException;
+import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.ItemEntity;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.service.UserService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,49 +30,62 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public BookingEntity getBookingById(Long userId, Long bookingId) {
-        return bookingRepository.findByIdAndBooker_IdOrItem_Owner_Id(bookingId, userId, userId).orElseThrow(() ->
-                new BookingNotFoundException("По данной выборке бронирование не найдено!"));
+        BookingEntity bookingEntity = bookingRepository.findById(bookingId).orElseThrow(() ->
+                new BookingNotFoundException("Бронь по заданному ID не найдена"));
+        if (bookingEntity.getBooker().getId() == userId || bookingEntity.getItem().getOwner().getId() == userId) {
+            return bookingEntity;
+        } else {
+            throw new UserAccessException("Просматривать данные о бронировании может только владелец вещи или автор брони!");
+        }
     }
 
     @Override
     public List<BookingEntity> getBookingsByBooker(Long userId, String state) {
-        LocalDateTime now = LocalDateTime.now();
-        switch (state) {
-            case "ALL":
-                return bookingRepository.findAllByBooker_IdOrderByStart(userId);
-            case "CURRENT":
-                return bookingRepository.findAllByBooker_IdAndStartBeforeAndEndAfterOrderByStart(userId, now, now);
-            case "PAST":
-                return bookingRepository.findAllByBooker_IdAndStartAfterOrderByStart(userId, now);
-            case "FUTURE":
-                return bookingRepository.findAllByBooker_IdAndEndBeforeOrderByStart(userId, now);
-            case "WAITING":
-                return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStart(userId, BookingStatus.WAITING);
-            case "REJECTED":
-                return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStart(userId, BookingStatus.REJECTED);
-            default:
-                throw new IncorrectStateException("Указаный параметр state некорректен!");
+        if (userService.getUserById(userId) != null) {
+            LocalDateTime now = LocalDateTime.now();
+            switch (state) {
+                case "ALL":
+                    return bookingRepository.findAllByBooker_IdOrderByStart(userId);
+                case "CURRENT":
+                    return bookingRepository.findAllByBooker_IdAndStartBeforeAndEndAfterOrderByStart(userId, now, now);
+                case "PAST":
+                    return bookingRepository.findAllByBooker_IdAndStartAfterOrderByStart(userId, now);
+                case "FUTURE":
+                    return bookingRepository.findAllByBooker_IdAndEndBeforeOrderByStart(userId, now);
+                case "WAITING":
+                    return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStart(userId, BookingStatus.WAITING);
+                case "REJECTED":
+                    return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStart(userId, BookingStatus.REJECTED);
+                default:
+                    throw new IncorrectStateException("Указаный параметр state некорректен!");
+            }
+        } else {
+            throw new UserNotFoundException("Пользователь с данным ID не найден!");
         }
     }
 
     @Override
     public List<BookingEntity> getBookingByOwner(Long userId, String state) {
-        LocalDateTime now = LocalDateTime.now();
-        switch (state) {
-            case "ALL":
-                return bookingRepository.findAllByItem_Owner_IdOrderByStart(userId);
-            case "CURRENT":
-                return bookingRepository.findAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStart(userId, now, now);
-            case "PAST":
-                return bookingRepository.findAllByItem_Owner_IdAndStartAfterOrderByStart(userId, now);
-            case "FUTURE":
-                return bookingRepository.findAllByItem_Owner_IdAndEndBeforeOrderByStart(userId, now);
-            case "WAITING":
-                return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStart(userId, BookingStatus.WAITING);
-            case "REJECTED":
-                return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStart(userId, BookingStatus.REJECTED);
-            default:
-                throw new IncorrectStateException("Указаный параметр state некорректен!");
+        if (userService.getUserById(userId) != null) {
+            LocalDateTime now = LocalDateTime.now();
+            switch (state) {
+                case "ALL":
+                    return bookingRepository.findAllByItem_Owner_IdOrderByStart(userId);
+                case "CURRENT":
+                    return bookingRepository.findAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStart(userId, now, now);
+                case "PAST":
+                    return bookingRepository.findAllByItem_Owner_IdAndStartAfterOrderByStart(userId, now);
+                case "FUTURE":
+                    return bookingRepository.findAllByItem_Owner_IdAndEndBeforeOrderByStart(userId, now);
+                case "WAITING":
+                    return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStart(userId, BookingStatus.WAITING);
+                case "REJECTED":
+                    return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStart(userId, BookingStatus.REJECTED);
+                default:
+                    throw new IncorrectStateException("Указаный параметр state некорректен!");
+            }
+        } else {
+            throw new UserNotFoundException("Пользователь с данным ID не найден!");
         }
     }
 
@@ -86,14 +94,19 @@ public class BookingServiceImpl implements BookingService {
     public BookingEntity addBooking(Long userId, BookingEntity bookingEntity, Long itemId) {
         UserEntity booker = userService.getUserById(userId);
         ItemEntity item = itemService.getItemById(itemId);
-        if (bookingEntity.getStart().isBefore(bookingEntity.getEnd()) && (item.getAvailable())) {
-            item.setAvailable(false);
-            bookingEntity.setBooker(booker);
-            bookingEntity.setItem(item);
-            bookingEntity.setStatus(BookingStatus.WAITING);
-            return bookingRepository.save(bookingEntity);
+        if (bookingEntity.getStart().isBefore(bookingEntity.getEnd()) &&
+                (!bookingEntity.getStart().isBefore(LocalDateTime.now()))) {
+            if (item.getAvailable()) {
+                //item.setAvailable(false);
+                bookingEntity.setBooker(booker);
+                bookingEntity.setItem(item);
+                bookingEntity.setStatus(BookingStatus.WAITING);
+                return bookingRepository.save(bookingEntity);
+            } else {
+                throw new ItemNotAvailableException("Данный товар уже забронирован!");
+            }
         } else {
-            throw new IncorrectDateException("Дата старта аренды не может быть позднее даты конца аренды!");
+            throw new IncorrectDateException("Указаны некорректные даты бронирования!");
         }
     }
 
