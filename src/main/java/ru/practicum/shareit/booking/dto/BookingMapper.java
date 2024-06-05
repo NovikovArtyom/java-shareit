@@ -29,4 +29,11 @@ public class BookingMapper {
                 null
         );
     }
+
+    public static LastAndNextBookingDto toLastAndNextBookingDto(BookingEntity bookingEntity) {
+        return new LastAndNextBookingDto(
+                bookingEntity.getId() != null ? bookingEntity.getId() : null,
+                bookingEntity.getBooker() != null ? bookingEntity.getBooker().getId() : null
+        );
+    }
 }

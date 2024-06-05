@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
+import ru.practicum.shareit.booking.dto.LastAndNextBookingDto;
 import ru.practicum.shareit.booking.model.BookingEntity;
 
 import java.util.List;
@@ -14,4 +15,8 @@ public interface BookingService {
     List<BookingEntity> getBookingsByBooker(Long userId, String state);
 
     List<BookingEntity> getBookingByOwner(Long userId, String state);
+
+    LastAndNextBookingDto getLastBookings(Long itemId);
+
+    LastAndNextBookingDto getNextBookings(Long itemId);
 }

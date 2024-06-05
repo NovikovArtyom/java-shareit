@@ -26,9 +26,7 @@ public class ItemController {
 
     @GetMapping
     public Collection<ItemDto> getAllItems(@RequestHeader(USER_ID) Long userId) {
-        return itemService.getAllItems(userId).stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
+        return itemService.getAllItems(userId);
     }
 
     @GetMapping("/{itemId}")

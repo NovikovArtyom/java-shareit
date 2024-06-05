@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
+import ru.practicum.shareit.booking.dto.LastAndNextBookingDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -27,4 +28,6 @@ public class ItemDto {
     private Boolean available;
     private UserDto owner;
     private ItemRequestDto request;
+    private LastAndNextBookingDto lastBooking;
+    private LastAndNextBookingDto nextBooking;
 }

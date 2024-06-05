@@ -3,6 +3,8 @@ package ru.practicum.shareit.booking.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.dto.LastAndNextBookingDto;
 import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -13,6 +15,7 @@ import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,6 +23,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final ItemService itemService;
+    private LocalDateTime now = LocalDateTime.now();
 
     public BookingServiceImpl(BookingRepository bookingRepository, UserService userService, ItemService itemService) {
         this.bookingRepository = bookingRepository;
@@ -45,17 +49,17 @@ public class BookingServiceImpl implements BookingService {
             LocalDateTime now = LocalDateTime.now();
             switch (state) {
                 case "ALL":
-                    return bookingRepository.findAllByBooker_IdOrderByStart(userId);
+                    return bookingRepository.findAllByBooker_IdOrderByStartDesc(userId);
                 case "CURRENT":
-                    return bookingRepository.findAllByBooker_IdAndStartBeforeAndEndAfterOrderByStart(userId, now, now);
+                    return bookingRepository.findAllByBooker_IdAndStartBeforeAndEndAfterOrderByStartDesc(userId, now, now);
                 case "PAST":
-                    return bookingRepository.findAllByBooker_IdAndStartAfterOrderByStart(userId, now);
+                    return bookingRepository.findAllByBooker_IdAndEndBeforeOrderByStartDesc(userId, now);
                 case "FUTURE":
-                    return bookingRepository.findAllByBooker_IdAndEndBeforeOrderByStart(userId, now);
+                    return bookingRepository.findAllByBooker_IdAndStartAfterOrderByStartDesc(userId, now);
                 case "WAITING":
-                    return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStart(userId, BookingStatus.WAITING);
+                    return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.WAITING);
                 case "REJECTED":
-                    return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStart(userId, BookingStatus.REJECTED);
+                    return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.REJECTED);
                 default:
                     throw new IncorrectStateException("Указаный параметр state некорректен!");
             }
@@ -70,17 +74,17 @@ public class BookingServiceImpl implements BookingService {
             LocalDateTime now = LocalDateTime.now();
             switch (state) {
                 case "ALL":
-                    return bookingRepository.findAllByItem_Owner_IdOrderByStart(userId);
+                    return bookingRepository.findAllByItem_Owner_IdOrderByStartDesc(userId);
                 case "CURRENT":
-                    return bookingRepository.findAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStart(userId, now, now);
+                    return bookingRepository.findAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStartDesc(userId, now, now);
                 case "PAST":
-                    return bookingRepository.findAllByItem_Owner_IdAndStartAfterOrderByStart(userId, now);
+                    return bookingRepository.findAllByItem_Owner_IdAndEndBeforeOrderByStartDesc(userId, now);
                 case "FUTURE":
-                    return bookingRepository.findAllByItem_Owner_IdAndEndBeforeOrderByStart(userId, now);
+                    return bookingRepository.findAllByItem_Owner_IdAndStartAfterOrderByStartDesc(userId, now);
                 case "WAITING":
-                    return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStart(userId, BookingStatus.WAITING);
+                    return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.WAITING);
                 case "REJECTED":
-                    return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStart(userId, BookingStatus.REJECTED);
+                    return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.REJECTED);
                 default:
                     throw new IncorrectStateException("Указаный параметр state некорректен!");
             }
@@ -88,6 +92,21 @@ public class BookingServiceImpl implements BookingService {
             throw new UserNotFoundException("Пользователь с данным ID не найден!");
         }
     }
+
+    @Override
+    public LastAndNextBookingDto getLastBookings(Long itemId) {
+        return BookingMapper.toLastAndNextBookingDto
+                (bookingRepository.findTop1ByItem_IdAndStartBeforeOrderByStartDesc(itemId, now));
+    }
+
+    @Override
+    public LastAndNextBookingDto getNextBookings(Long itemId) {
+        return BookingMapper.toLastAndNextBookingDto
+                (bookingRepository.findTop1ByItem_IdAndStartAfterOrderByStart(itemId, now));
+    }
+
+
+
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
