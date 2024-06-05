@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import ru.practicum.shareit.booking.dto.LastAndNextBookingDto;
+import ru.practicum.shareit.item.comments.CommentResponseDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.UserEntity;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
@@ -30,4 +32,5 @@ public class ItemDto {
     private ItemRequestDto request;
     private LastAndNextBookingDto lastBooking;
     private LastAndNextBookingDto nextBooking;
+    private List<CommentResponseDto> comments;
 }

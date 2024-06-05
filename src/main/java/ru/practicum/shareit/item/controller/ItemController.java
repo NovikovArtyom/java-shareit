@@ -34,7 +34,7 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@PathVariable Long itemId) {
-        return ItemMapper.toItemDto(itemService.getItemById(itemId));
+        return itemService.getItemById(itemId);
     }
 
     @GetMapping("/search")
@@ -56,9 +56,9 @@ public class ItemController {
         return CommentMapper.toDto(itemService.addComment(userId, itemId, CommentMapper.toEntity(commentRequestDto)));
     }
 
-                                         @PatchMapping("/{itemId}")
+    @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader(USER_ID) Long userId,
-                                         @PathVariable Long itemId, @RequestBody UpdatedItemDto updatedItemDto) {
+                              @PathVariable Long itemId, @RequestBody UpdatedItemDto updatedItemDto) {
         return ItemMapper.toItemDto(itemService.updateItem(userId, itemId, updatedItemDto));
     }
 }

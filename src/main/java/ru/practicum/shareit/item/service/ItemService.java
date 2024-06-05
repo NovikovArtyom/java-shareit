@@ -10,7 +10,7 @@ import java.util.List;
 public interface ItemService {
     List<ItemDto> getAllItems(Long userId);
 
-    ItemEntity getItemById(Long itemId);
+    ItemDto getItemById(Long itemId);
 
     List<ItemEntity> search(String text);
 

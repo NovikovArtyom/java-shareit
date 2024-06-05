@@ -59,7 +59,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(final IncorrectStateException e) {
         log.error("Указаный параметр state некорректен!");
         return new ErrorResponse("error: ", "Указаный параметр state некорректен!");
@@ -70,5 +70,19 @@ public class ExceptionController {
     public ErrorResponse handle(final ItemNotAvailableException e) {
         log.error("Данный товар уже забронирован!");
         return new ErrorResponse("error: ", "Данный товар уже забронирован!");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final RepeatedApproveException e) {
+        log.error("Подтвердить бронирование можно только оно в статусе WAITING!");
+        return new ErrorResponse("error: ", "Подтвердить бронирование можно только оно в статусе WAITING!");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final IncorrectStatusException e, String state) {
+        log.error("Указан некорректный статус!");
+        return new ErrorResponse("error: ", String.format("Unknown state: %s",state));
     }
 }

@@ -3,14 +3,12 @@ package ru.practicum.shareit.item.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.item.comments.CommentEntity;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.UserEntity;
 
 import javax.persistence.*;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Entity
 @Table(name = "items")
 @Data

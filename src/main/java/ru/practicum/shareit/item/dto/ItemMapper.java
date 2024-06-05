@@ -16,6 +16,7 @@ public class ItemMapper {
                 UserMapper.toUserDto(item.getOwner()),
                 item.getRequest() != null ? ItemRequestMapper.toItemRequestDto(item.getRequest()) : null,
                 null,
+                null,
                 null
         );
     }

@@ -9,13 +9,13 @@ import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.*;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.ItemEntity;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,7 +61,7 @@ public class BookingServiceImpl implements BookingService {
                 case "REJECTED":
                     return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.REJECTED);
                 default:
-                    throw new IncorrectStateException("Указаный параметр state некорректен!");
+                    throw new IncorrectStatusException(state);
             }
         } else {
             throw new UserNotFoundException("Пользователь с данным ID не найден!");
@@ -86,7 +86,7 @@ public class BookingServiceImpl implements BookingService {
                 case "REJECTED":
                     return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.REJECTED);
                 default:
-                    throw new IncorrectStateException("Указаный параметр state некорректен!");
+                    throw new IncorrectStatusException("");
             }
         } else {
             throw new UserNotFoundException("Пользователь с данным ID не найден!");
@@ -95,24 +95,20 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public LastAndNextBookingDto getLastBookings(Long itemId) {
-        return BookingMapper.toLastAndNextBookingDto
-                (bookingRepository.findTop1ByItem_IdAndStartBeforeOrderByStartDesc(itemId, now));
+        return BookingMapper.toLastAndNextBookingDto(bookingRepository.findTop1ByItem_IdAndStartBeforeOrderByStartDesc(itemId, now));
     }
 
     @Override
     public LastAndNextBookingDto getNextBookings(Long itemId) {
-        return BookingMapper.toLastAndNextBookingDto
-                (bookingRepository.findTop1ByItem_IdAndStartAfterOrderByStart(itemId, now));
+        return BookingMapper.toLastAndNextBookingDto(bookingRepository.findTop1ByItem_IdAndStartAfterOrderByStart(itemId, now));
     }
-
-
 
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public BookingEntity addBooking(Long userId, BookingEntity bookingEntity, Long itemId) {
         UserEntity booker = userService.getUserById(userId);
-        ItemEntity item = itemService.getItemById(itemId);
+        ItemEntity item = ItemMapper.fromItemDtoToItemEntity(itemService.getItemById(itemId));
         if (bookingEntity.getStart().isBefore(bookingEntity.getEnd()) &&
                 (!bookingEntity.getStart().isBefore(LocalDateTime.now()))) {
             if (item.getAvailable()) {
@@ -137,12 +133,16 @@ public class BookingServiceImpl implements BookingService {
                 new BookingNotFoundException("Заявка о бронировании по дайнному Id не найдена!"));
         UserEntity owner = bookingEntity.getItem().getOwner();
         if (owner == user) {
-            if (approved) {
-                bookingEntity.setStatus(BookingStatus.APPROVED);
+            if (bookingEntity.getStatus() == BookingStatus.WAITING) {
+                if (approved) {
+                    bookingEntity.setStatus(BookingStatus.APPROVED);
+                } else {
+                    bookingEntity.setStatus(BookingStatus.REJECTED);
+                }
+                return bookingRepository.save(bookingEntity);
             } else {
-                bookingEntity.setStatus(BookingStatus.REJECTED);
+                throw new RepeatedApproveException("Подтвердить бронирование можно только оно в статусе WAITING!");
             }
-            return bookingRepository.save(bookingEntity);
         } else {
             throw new UserAccessException("Изменять статус заявки на бронирование может только владелец вещи!");
         }
