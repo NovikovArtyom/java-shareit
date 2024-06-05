@@ -2,6 +2,9 @@ package ru.practicum.shareit.item.controller;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.comments.CommentMapper;
+import ru.practicum.shareit.item.comments.CommentRequestDto;
+import ru.practicum.shareit.item.comments.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.UpdatedItemDto;
@@ -46,9 +49,16 @@ public class ItemController {
         return ItemMapper.toItemDto(itemService.addItem(userId, ItemMapper.fromItemDtoToItemEntity(itemDto)));
     }
 
-    @PatchMapping("/{itemId}")
+    @PostMapping("/{itemId}/comment")
+    public CommentResponseDto addComment(@RequestHeader(USER_ID) Long userId,
+                                         @PathVariable Long itemId,
+                                         @RequestBody CommentRequestDto commentRequestDto) {
+        return CommentMapper.toDto(itemService.addComment(userId, itemId, CommentMapper.toEntity(commentRequestDto)));
+    }
+
+                                         @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader(USER_ID) Long userId,
-                              @PathVariable Long itemId, @RequestBody UpdatedItemDto updatedItemDto) {
+                                         @PathVariable Long itemId, @RequestBody UpdatedItemDto updatedItemDto) {
         return ItemMapper.toItemDto(itemService.updateItem(userId, itemId, updatedItemDto));
     }
 }

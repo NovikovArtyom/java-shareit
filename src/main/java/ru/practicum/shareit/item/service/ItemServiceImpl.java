@@ -8,6 +8,8 @@ import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserAccessException;
+import ru.practicum.shareit.item.comments.CommentEntity;
+import ru.practicum.shareit.item.comments.CommentRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.UpdatedItemDto;
@@ -26,11 +28,14 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserService userService;
     private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
 
-    public ItemServiceImpl(ItemRepository itemRepository, UserService userService, BookingRepository bookingRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, UserService userService, BookingRepository bookingRepository,
+                           CommentRepository commentRepository) {
         this.itemRepository = itemRepository;
         this.userService = userService;
         this.bookingRepository = bookingRepository;
+        this.commentRepository = commentRepository;
     }
 
 
@@ -98,6 +103,21 @@ public class ItemServiceImpl implements ItemService {
             return itemRepository.save(item);
         } else {
             throw new UserAccessException("Редактировать информацию о вещи может только ее владелец!");
+        }
+    }
+
+    @Override
+    public CommentEntity addComment(Long userId, Long itemId, CommentEntity commentEntity) {
+        UserEntity user = userService.getUserById(userId);
+        ItemEntity item = itemRepository.findById(itemId).orElseThrow(() ->
+                new ItemNotFoundException("Данная вещь не найдена!"));
+        BookingEntity booking = bookingRepository.findByItem_IdAndBooker_Id(itemId, userId);
+        if (booking != null) {
+            commentEntity.setItem(item);
+            commentEntity.setAuthor(user);
+            commentEntity.setCreated(LocalDateTime.now());
+        } else {
+            throw new UserAccessException("Комментарии может создавать только арендатор вещи!");
         }
     }
 
