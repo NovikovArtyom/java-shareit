@@ -81,8 +81,9 @@ public class ExceptionController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handle(final IncorrectStatusException e, String state) {
+    public ShortErrorResponse handle(final IncorrectStatusException e) {
+        String state = e.getState();
         log.error("Указан некорректный статус!");
-        return new ErrorResponse("error: ", String.format("Unknown state: %s",state));
+        return new ShortErrorResponse(String.format("Unknown state: %s",state));
     }
 }

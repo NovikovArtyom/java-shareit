@@ -86,7 +86,7 @@ public class BookingServiceImpl implements BookingService {
                 case "REJECTED":
                     return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.REJECTED);
                 default:
-                    throw new IncorrectStatusException("");
+                    throw new IncorrectStatusException(state);
             }
         } else {
             throw new UserNotFoundException("Пользователь с данным ID не найден!");
@@ -108,15 +108,18 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public BookingEntity addBooking(Long userId, BookingEntity bookingEntity, Long itemId) {
         UserEntity booker = userService.getUserById(userId);
-        ItemEntity item = ItemMapper.fromItemDtoToItemEntity(itemService.getItemById(itemId));
+        ItemEntity item = ItemMapper.fromItemDtoToItemEntity(itemService.getItemById(userId, itemId));
         if (bookingEntity.getStart().isBefore(bookingEntity.getEnd()) &&
                 (!bookingEntity.getStart().isBefore(LocalDateTime.now()))) {
             if (item.getAvailable()) {
-                //item.setAvailable(false);
-                bookingEntity.setBooker(booker);
-                bookingEntity.setItem(item);
-                bookingEntity.setStatus(BookingStatus.WAITING);
-                return bookingRepository.save(bookingEntity);
+                if (!booker.getId().equals(item.getOwner().getId())) {
+                    bookingEntity.setBooker(booker);
+                    bookingEntity.setItem(item);
+                    bookingEntity.setStatus(BookingStatus.WAITING);
+                    return bookingRepository.save(bookingEntity);
+                } else {
+                    throw new UserAccessException("Пользователь не может забронировать свой товар!");
+                }
             } else {
                 throw new ItemNotAvailableException("Данный товар уже забронирован!");
             }

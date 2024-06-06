@@ -64,9 +64,15 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public ItemDto getItemById(Long itemId) {
+    public ItemDto getItemById(Long userId, Long itemId) {
         ItemDto itemDto = ItemMapper.toItemDto(itemRepository.findById(itemId).orElseThrow(() ->
                 new ItemNotFoundException(String.format("Вещь c id = %d не зарегистрирован!", itemId))));
+        BookingEntity lastBooking = bookingRepository.findTop1ByItem_IdAndStartBeforeOrderByStartDesc(itemDto.getId(), LocalDateTime.now());
+        BookingEntity nextBooking = bookingRepository.findTop1ByItem_IdAndStartAfterOrderByStart(itemDto.getId(), LocalDateTime.now());
+        if (lastBooking != null && nextBooking != null && itemDto.getOwner().getId().equals(userId)) {
+            itemDto.setLastBooking(BookingMapper.toLastAndNextBookingDto(lastBooking));
+            itemDto.setNextBooking(BookingMapper.toLastAndNextBookingDto(nextBooking));
+        }
         List<CommentResponseDto> comments = commentRepository.findByItem_Id(itemDto.getId()).stream()
                 .map(CommentMapper::toDto)
                 .collect(Collectors.toList());

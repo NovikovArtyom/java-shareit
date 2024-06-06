@@ -15,19 +15,19 @@ public class UserMapper {
 
     public static UserEntity fromUserDtoToUserEntity(UserDto userDto) {
         return new UserEntity(
-                null,
+                userDto.getId() != null ? userDto.getId() : null,
                 userDto.getName(),
                 userDto.getEmail()
         );
     }
 
-    public static UserEntity fromUpdatedUserDtoToUserEntity(UpdatedUserDto updatedUserDto) {
-        return new UserEntity(
-                null,
-                updatedUserDto.getName(),
-                updatedUserDto.getEmail()
-        );
-    }
+//    public static UserEntity fromUpdatedUserDtoToUserEntity(UpdatedUserDto updatedUserDto) {
+//        return new UserEntity(
+//                null,
+//                updatedUserDto.getName(),
+//                updatedUserDto.getEmail()
+//        );
+//    }
 
     public static UserResponseDto toUserResponseDto(UserEntity userEntity) {
         return new UserResponseDto(

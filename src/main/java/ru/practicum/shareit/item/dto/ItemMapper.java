@@ -38,7 +38,7 @@ public class ItemMapper {
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                null,
+                itemDto.getOwner() != null ? UserMapper.fromUserDtoToUserEntity(itemDto.getOwner()) : null,
                 null
         );
     }

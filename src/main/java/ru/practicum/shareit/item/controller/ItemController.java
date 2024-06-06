@@ -33,8 +33,8 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemById(@PathVariable Long itemId) {
-        return itemService.getItemById(itemId);
+    public ItemDto getItemById(@RequestHeader(USER_ID) Long userId,@PathVariable Long itemId) {
+        return itemService.getItemById(userId, itemId);
     }
 
     @GetMapping("/search")
@@ -52,7 +52,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public CommentResponseDto addComment(@RequestHeader(USER_ID) Long userId,
                                          @PathVariable Long itemId,
-                                         @RequestBody CommentRequestDto commentRequestDto) {
+                                         @Validated @RequestBody CommentRequestDto commentRequestDto) {
         return CommentMapper.toDto(itemService.addComment(userId, itemId, CommentMapper.toEntity(commentRequestDto)));
     }
 
