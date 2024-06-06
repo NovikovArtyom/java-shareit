@@ -6,9 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Entity
 @Table(name = "users")
 @Data

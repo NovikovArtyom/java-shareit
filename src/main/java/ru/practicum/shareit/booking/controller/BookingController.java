@@ -30,7 +30,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingResponseDto> getBookingsByOwner(@RequestHeader(USER_ID) Long userId,
-                                               @RequestParam(required = false, defaultValue = "ALL") String state) {
+                                                       @RequestParam(required = false, defaultValue = "ALL") String state) {
         return bookingService.getBookingByOwner(userId, state).stream()
                 .map(BookingMapper::toBookingDto)
                 .collect(Collectors.toList());
@@ -51,8 +51,8 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingResponseDto approveBooking(@RequestHeader(USER_ID) Long userId,
-                                     @PathVariable Long bookingId,
-                                     @RequestParam Boolean approved) {
+                                             @PathVariable Long bookingId,
+                                             @RequestParam Boolean approved) {
         return BookingMapper.toBookingDto(bookingService.approveBooking(userId, bookingId, approved));
     }
 }

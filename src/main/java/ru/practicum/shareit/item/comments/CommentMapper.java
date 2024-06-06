@@ -10,7 +10,7 @@ public class CommentMapper {
                 commentEntity.getText(),
                 commentEntity.getAuthor().getName(),
                 commentEntity.getCreated()
-                );
+        );
     }
 
     public static CommentEntity toEntity(CommentRequestDto commentRequestDto) {

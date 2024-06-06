@@ -3,8 +3,6 @@ package ru.practicum.shareit.booking.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.booking.dto.LastAndNextBookingDto;
 import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -44,6 +42,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingEntity> getBookingsByBooker(Long userId, String state) {
         if (userService.getUserById(userId) != null) {
             LocalDateTime now = LocalDateTime.now();
@@ -69,6 +68,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingEntity> getBookingByOwner(Long userId, String state) {
         if (userService.getUserById(userId) != null) {
             LocalDateTime now = LocalDateTime.now();
@@ -92,17 +92,6 @@ public class BookingServiceImpl implements BookingService {
             throw new UserNotFoundException("Пользователь с данным ID не найден!");
         }
     }
-
-    @Override
-    public LastAndNextBookingDto getLastBookings(Long itemId) {
-        return BookingMapper.toLastAndNextBookingDto(bookingRepository.findTop1ByItem_IdAndStartBeforeOrderByStartDesc(itemId, now));
-    }
-
-    @Override
-    public LastAndNextBookingDto getNextBookings(Long itemId) {
-        return BookingMapper.toLastAndNextBookingDto(bookingRepository.findTop1ByItem_IdAndStartAfterOrderByStart(itemId, now));
-    }
-
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -150,6 +139,4 @@ public class BookingServiceImpl implements BookingService {
             throw new UserAccessException("Изменять статус заявки на бронирование может только владелец вещи!");
         }
     }
-
-
 }

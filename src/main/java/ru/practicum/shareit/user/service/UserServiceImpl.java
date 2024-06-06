@@ -10,7 +10,6 @@ import ru.practicum.shareit.user.dto.UpdatedUserDto;
 import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Service

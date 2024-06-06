@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.comments;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.practicum.shareit.user.model.UserEntity;
 
 import java.time.LocalDateTime;
 

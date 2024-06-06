@@ -5,28 +5,25 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.model.BookingStatus;
 
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
 
     List<BookingEntity> findAllByBooker_IdOrderByStartDesc(Long bookerId);
 
-    List<BookingEntity> findAllByBooker_IdAndStartBeforeAndEndAfterOrderByStartDesc(Long booker_id, LocalDateTime start, LocalDateTime end);
+    List<BookingEntity> findAllByBooker_IdAndStartBeforeAndEndAfterOrderByStartDesc(Long bookerId, LocalDateTime start, LocalDateTime end);
 
-    List<BookingEntity> findAllByBooker_IdAndStartAfterOrderByStartDesc(Long booker_id, LocalDateTime start);
+    List<BookingEntity> findAllByBooker_IdAndStartAfterOrderByStartDesc(Long bookerId, LocalDateTime start);
 
-    List<BookingEntity> findAllByBooker_IdAndEndBeforeOrderByStartDesc(Long booker_id, LocalDateTime start);
+    List<BookingEntity> findAllByBooker_IdAndEndBeforeOrderByStartDesc(Long bookerId, LocalDateTime start);
 
-    List<BookingEntity> findAllByBooker_IdAndStatusEqualsOrderByStartDesc(Long booker_id, BookingStatus status);
+    List<BookingEntity> findAllByBooker_IdAndStatusEqualsOrderByStartDesc(Long bookerId, BookingStatus status);
 
     List<BookingEntity> findAllByItem_Owner_IdOrderByStartDesc(Long userId);
 
-    List<BookingEntity> findAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStartDesc
-            (Long userId, LocalDateTime start, LocalDateTime end);
+    List<BookingEntity> findAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStartDesc(Long userId, LocalDateTime start, LocalDateTime end);
 
     List<BookingEntity> findAllByItem_Owner_IdAndStartAfterOrderByStartDesc(Long userId, LocalDateTime start);
 
@@ -34,9 +31,9 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
 
     List<BookingEntity> findAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc(Long userId, BookingStatus status);
 
-    BookingEntity findTop1ByItem_IdAndStartBeforeOrderByStartDesc(Long itemId, LocalDateTime now);
+    BookingEntity findTop1ByItem_IdAndStartBeforeAndStatusEqualsOrderByStartDesc(Long itemId, LocalDateTime now, BookingStatus status);
 
-    BookingEntity findTop1ByItem_IdAndStartAfterOrderByStart(Long itemId, LocalDateTime now);
+    BookingEntity findTop1ByItem_IdAndStartAfterAndStatusEqualsOrderByStart(Long itemId, LocalDateTime now, BookingStatus status);
 
-    BookingEntity findByItem_IdAndBooker_Id(Long itemId, Long bookerId);
+    Boolean existsByItem_IdAndBooker_IdAndStatusEqualsAndStartBefore(Long itemId, Long bookerId, BookingStatus status, LocalDateTime now);
 }

@@ -84,6 +84,15 @@ public class ExceptionController {
     public ShortErrorResponse handle(final IncorrectStatusException e) {
         String state = e.getState();
         log.error("Указан некорректный статус!");
-        return new ShortErrorResponse(String.format("Unknown state: %s",state));
+        return new ShortErrorResponse(String.format("Unknown state: %s", state));
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final IncorrectCommentException e) {
+        log.error("Добавление комментария невозможно!");
+        return new ErrorResponse("error: ", "Добавление комментария невозможно!");
+    }
+
+
 }

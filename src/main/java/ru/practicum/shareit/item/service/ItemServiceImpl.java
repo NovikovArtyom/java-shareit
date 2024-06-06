@@ -5,7 +5,9 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingEntity;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exception.IncorrectCommentException;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserAccessException;
 import ru.practicum.shareit.item.comments.CommentEntity;
@@ -39,8 +41,6 @@ public class ItemServiceImpl implements ItemService {
         this.commentRepository = commentRepository;
     }
 
-
-    //TODO refactor))
     @Override
     @Transactional(readOnly = true)
     public List<ItemDto> getAllItems(Long userId) {
@@ -48,8 +48,8 @@ public class ItemServiceImpl implements ItemService {
         List<ItemEntity> items = itemRepository.findAllByOwner_Id(user.getId());
         return items.stream().map(item -> {
             ItemDto itemDto = ItemMapper.toItemDto(item);
-            BookingEntity lastBooking = bookingRepository.findTop1ByItem_IdAndStartBeforeOrderByStartDesc(itemDto.getId(), LocalDateTime.now());
-            BookingEntity nextBooking = bookingRepository.findTop1ByItem_IdAndStartAfterOrderByStart(item.getId(), LocalDateTime.now());
+            BookingEntity lastBooking = bookingRepository.findTop1ByItem_IdAndStartBeforeAndStatusEqualsOrderByStartDesc(itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED);
+            BookingEntity nextBooking = bookingRepository.findTop1ByItem_IdAndStartAfterAndStatusEqualsOrderByStart(itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED);
             if (lastBooking != null && nextBooking != null) {
                 itemDto.setLastBooking(BookingMapper.toLastAndNextBookingDto(lastBooking));
                 itemDto.setNextBooking(BookingMapper.toLastAndNextBookingDto(nextBooking));
@@ -67,11 +67,15 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItemById(Long userId, Long itemId) {
         ItemDto itemDto = ItemMapper.toItemDto(itemRepository.findById(itemId).orElseThrow(() ->
                 new ItemNotFoundException(String.format("Вещь c id = %d не зарегистрирован!", itemId))));
-        BookingEntity lastBooking = bookingRepository.findTop1ByItem_IdAndStartBeforeOrderByStartDesc(itemDto.getId(), LocalDateTime.now());
-        BookingEntity nextBooking = bookingRepository.findTop1ByItem_IdAndStartAfterOrderByStart(itemDto.getId(), LocalDateTime.now());
-        if (lastBooking != null && nextBooking != null && itemDto.getOwner().getId().equals(userId)) {
-            itemDto.setLastBooking(BookingMapper.toLastAndNextBookingDto(lastBooking));
-            itemDto.setNextBooking(BookingMapper.toLastAndNextBookingDto(nextBooking));
+        BookingEntity lastBooking = bookingRepository.findTop1ByItem_IdAndStartBeforeAndStatusEqualsOrderByStartDesc(itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED);
+        BookingEntity nextBooking = bookingRepository.findTop1ByItem_IdAndStartAfterAndStatusEqualsOrderByStart(itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED);
+        if (itemDto.getOwner().getId().equals(userId)) {
+            if (lastBooking != null) {
+                itemDto.setLastBooking(BookingMapper.toLastAndNextBookingDto(lastBooking));
+            }
+            if (nextBooking != null) {
+                itemDto.setNextBooking(BookingMapper.toLastAndNextBookingDto(nextBooking));
+            }
         }
         List<CommentResponseDto> comments = commentRepository.findByItem_Id(itemDto.getId()).stream()
                 .map(CommentMapper::toDto)
@@ -119,17 +123,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public CommentEntity addComment(Long userId, Long itemId, CommentEntity commentEntity) {
         UserEntity user = userService.getUserById(userId);
         ItemEntity item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("Данная вещь не найдена!"));
-        BookingEntity booking = bookingRepository.findByItem_IdAndBooker_Id(itemId, userId);
-        if (booking != null) {
+        if (bookingRepository.existsByItem_IdAndBooker_IdAndStatusEqualsAndStartBefore(itemId, userId, BookingStatus.APPROVED, LocalDateTime.now())) {
             commentEntity.setItem(item);
             commentEntity.setAuthor(user);
             commentEntity.setCreated(LocalDateTime.now());
             return commentRepository.save(commentEntity);
         } else {
-            throw new UserAccessException("Комментарии может создавать только арендатор вещи!");
+            throw new IncorrectCommentException("Оставить комментарий невозможно!");
         }
     }
 }
