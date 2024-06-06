@@ -34,7 +34,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingEntity getBookingById(Long userId, Long bookingId) {
         BookingEntity bookingEntity = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new BookingNotFoundException("Бронь по заданному ID не найдена"));
-        if (bookingEntity.getBooker().getId() == userId || bookingEntity.getItem().getOwner().getId() == userId) {
+        if (bookingEntity.getBooker().getId().equals(userId) || bookingEntity.getItem().getOwner().getId().equals(userId)) {
             return bookingEntity;
         } else {
             throw new UserAccessException("Просматривать данные о бронировании может только владелец вещи или автор брони!");
