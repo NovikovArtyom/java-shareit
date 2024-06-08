@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -24,18 +26,21 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<UserEntity> getAllUsers() {
+        log.info("Получение списка пользователей");
         return userRepository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserEntity getUserById(Long userId) {
+        log.info(String.format("Получения пользователя с id = %d", userId));
         return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден!"));
     }
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public UserEntity createUser(UserEntity user) {
+        log.info("Создание нового пользователя");
         try {
             return userRepository.save(user);
         } catch (Exception e) {
@@ -46,6 +51,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public UserEntity updateUser(Long userId, UpdatedUserDto updatedUserDto) {
+        log.info(String.format("Обновление информации о пользователе с id = %d", userId));
         UserEntity user = userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException("Обновляемый пользователь не найден!"));
         if (updatedUserDto.getEmail() != null) {
@@ -66,6 +72,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void deleteUser(Long userId) {
+        log.info(String.format("Удаление пользователя с id = %d", userId));
         if (userRepository.existsById(userId)) {
             userRepository.deleteById(userId);
         } else {

@@ -25,9 +25,11 @@ public class BookingEntity {
     private LocalDateTime end;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", referencedColumnName = "id")
+    @ToString.Exclude
     private ItemEntity item;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booker_id", nullable = false)
+    @ToString.Exclude
     private UserEntity booker;
     @Enumerated(EnumType.ORDINAL)
     private BookingStatus status;

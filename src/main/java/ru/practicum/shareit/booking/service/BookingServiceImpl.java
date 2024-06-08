@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserService userService;
@@ -32,6 +34,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public BookingEntity getBookingById(Long userId, Long bookingId) {
+        log.info(String.format("Получение записи о бронировании с id = %d для пользователя с id = %d", bookingId, userId));
         BookingEntity bookingEntity = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new BookingNotFoundException("Бронь по заданному ID не найдена"));
         if (bookingEntity.getBooker().getId().equals(userId) || bookingEntity.getItem().getOwner().getId().equals(userId)) {
@@ -44,6 +47,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public List<BookingEntity> getBookingsByBooker(Long userId, String state) {
+        log.info(String.format("Получение записи о бронировании типа %s для пользователя-арендатора с id = %d", state, userId));
         if (userService.getUserById(userId) != null) {
             LocalDateTime now = LocalDateTime.now();
             switch (state) {
@@ -70,6 +74,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public List<BookingEntity> getBookingByOwner(Long userId, String state) {
+        log.info(String.format("Получение записи о бронировании типа %s для пользователя-владельца с id = %d", state, userId));
         if (userService.getUserById(userId) != null) {
             LocalDateTime now = LocalDateTime.now();
             switch (state) {
@@ -96,6 +101,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public BookingEntity addBooking(Long userId, BookingEntity bookingEntity, Long itemId) {
+        log.info(String.format("Добавление записи о бронировании вещи с id = %d пользователем с id = %d", itemId, userId));
         UserEntity booker = userService.getUserById(userId);
         ItemEntity item = ItemMapper.fromItemDtoToItemEntity(itemService.getItemById(userId, itemId));
         if (bookingEntity.getStart().isBefore(bookingEntity.getEnd()) &&
@@ -120,6 +126,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public BookingEntity approveBooking(Long userId, Long bookingId, Boolean approved) {
+        log.info(String.format("Подтверждение записи о бронировании с id = %d пользователем с id = %d", bookingId, userId));
         UserEntity user = userService.getUserById(userId);
         BookingEntity bookingEntity = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new BookingNotFoundException("Заявка о бронировании по дайнному Id не найдена!"));

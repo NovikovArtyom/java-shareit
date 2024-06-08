@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserService userService;
@@ -44,6 +46,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public List<ItemDto> getAllItems(Long userId) {
+        log.info(String.format("Получение списка вещей для пользователя с id = %d", userId));
         UserEntity user = userService.getUserById(userId);
         List<ItemEntity> items = itemRepository.findAllByOwner_Id(user.getId());
         return items.stream().map(item -> {
@@ -65,6 +68,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public ItemDto getItemById(Long userId, Long itemId) {
+        log.info(String.format("Получение вещи с id = %d для пользователя с id = %d", itemId, userId));
         ItemDto itemDto = ItemMapper.toItemDto(itemRepository.findById(itemId).orElseThrow(() ->
                 new ItemNotFoundException(String.format("Вещь c id = %d не зарегистрирован!", itemId))));
         BookingEntity lastBooking = bookingRepository.findTop1ByItem_IdAndStartBeforeAndStatusEqualsOrderByStartDesc(itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED);
@@ -87,6 +91,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(readOnly = true)
     public List<ItemEntity> search(String text) {
+        log.info(String.format("Получение списка вещей подходящих по фильтрацию поиска. Текст для поиска: %s", text));
         if (!text.equals("")) {
             return itemRepository.search(text);
         } else {
@@ -97,6 +102,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public ItemEntity addItem(Long userId, ItemEntity item) {
+        log.info(String.format("Добавление новой вещи пользователем с id = %d", userId));
         item.setOwner(userService.getUserById(userId));
         return itemRepository.save(item);
     }
@@ -104,6 +110,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public ItemEntity updateItem(Long userId, Long itemId, UpdatedItemDto updatedItemDto) {
+        log.info(String.format("Обновление информации о вещи с id = %d пользователем с id = %d", itemId, userId));
         UserEntity user = userService.getUserById(userId);
         ItemEntity item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(String.format("Вещь c id = %d не зарегистрирован!", itemId)));
         if (item.getOwner() == user) {
@@ -125,6 +132,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public CommentEntity addComment(Long userId, Long itemId, CommentEntity commentEntity) {
+        log.info(String.format("Добавление комментария для вещи с id = %d пользователем с id = %d", itemId, userId));
         UserEntity user = userService.getUserById(userId);
         ItemEntity item = itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException("Данная вещь не найдена!"));
         if (bookingRepository.existsByItem_IdAndBooker_IdAndStatusEqualsAndStartBefore(itemId, userId, BookingStatus.APPROVED, LocalDateTime.now())) {
