@@ -1,41 +1,82 @@
 package ru.practicum.shareit.user.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.DuplicateEmailException;
+import ru.practicum.shareit.exception.DuplicateUserException;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UpdatedUserDto;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapper;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
+import java.util.List;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository repository;
 
-    public Collection<UserDto> getAllUsers() {
-        return repository.getAllUsers().stream().map(UserMapper::toUserDto).collect(Collectors.toList());
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository repository) {
+        this.userRepository = repository;
     }
 
-    public UserDto getUserById(Long userId) {
-        return UserMapper.toUserDto(repository.getUserById(userId));
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserEntity> getAllUsers() {
+        log.info("Получение списка пользователей");
+        return userRepository.findAll();
     }
 
-    public UserDto createUser(UserDto userDto) {
-        User createdUser = repository.createUser(UserMapper.fromUserDtoToUserEntity(userDto));
-        return UserMapper.toUserDto(createdUser);
+    @Override
+    @Transactional(readOnly = true)
+    public UserEntity getUserById(Long userId) {
+        log.info(String.format("Получения пользователя с id = %d", userId));
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь с данным ID не найден!"));
     }
 
-    public UserDto updateUser(Long userId, UpdatedUserDto updatedUserDto) {
-        User updatedUser = repository.updateUser(userId, UserMapper.fromUpdatedUserDtoToUserEntity(updatedUserDto));
-        return UserMapper.toUserDto(updatedUser);
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public UserEntity createUser(UserEntity user) {
+        log.info("Создание нового пользователя");
+        try {
+            return userRepository.save(user);
+        } catch (Exception e) {
+            throw new DuplicateUserException("Данный пользователь уже зарегистрирован!");
+        }
     }
 
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public UserEntity updateUser(Long userId, UpdatedUserDto updatedUserDto) {
+        log.info(String.format("Обновление информации о пользователе с id = %d", userId));
+        UserEntity user = userRepository.findById(userId).orElseThrow(() ->
+                new UserNotFoundException("Обновляемый пользователь не найден!"));
+        if (updatedUserDto.getEmail() != null) {
+            Boolean duplicateEmail = userRepository.existsByEmail(updatedUserDto.getEmail());
+            UserEntity userDuplicateEmail = userRepository.findByEmail(updatedUserDto.getEmail());
+            if (!duplicateEmail || userDuplicateEmail == user) {
+                user.setEmail(updatedUserDto.getEmail());
+            } else {
+                throw new DuplicateEmailException("Данный email занят!");
+            }
+        }
+        if (updatedUserDto.getName() != null) {
+            user.setName(updatedUserDto.getName());
+        }
+        return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void deleteUser(Long userId) {
-        repository.deleteUser(userId);
+        log.info(String.format("Удаление пользователя с id = %d", userId));
+        if (userRepository.existsById(userId)) {
+            userRepository.deleteById(userId);
+        } else {
+            throw new UserNotFoundException("Пользователь не зарегистрирован!");
+        }
     }
 }
