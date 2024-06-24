@@ -10,6 +10,8 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.UpdatedItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,8 +30,10 @@ public class ItemController {
     }
 
     @GetMapping
-    public Collection<ItemDto> getAllItems(@RequestHeader(USER_ID) Long userId) {
-        return itemService.getAllItems(userId);
+    public Collection<ItemDto> getAllItems(@RequestHeader(USER_ID) Long userId,
+                                           @RequestParam(defaultValue = "0") @PositiveOrZero Integer form,
+                                           @RequestParam(defaultValue = "10") @PositiveOrZero Integer size) {
+        return itemService.getAllItems(userId, form, size);
     }
 
     @GetMapping("/{itemId}")
@@ -38,15 +42,17 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemDto> search(@RequestParam String text) {
-        return itemService.search(text).stream()
+    public List<ItemDto> search(@RequestParam(defaultValue = "0") @Positive Integer from,
+                                @RequestParam(defaultValue = "10") @Positive Integer size,
+                                @RequestParam String text) {
+        return itemService.search(from, size, text).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
     @PostMapping
     public ItemDto addItem(@RequestHeader(USER_ID) Long userId, @RequestBody @Validated ItemDto itemDto) {
-        return ItemMapper.toItemDto(itemService.addItem(userId, ItemMapper.fromItemDtoToItemEntity(itemDto)));
+        return ItemMapper.toItemDto(itemService.addItem(userId, itemDto.getRequestId(), ItemMapper.fromItemDtoToItemEntity(itemDto)));
     }
 
     @PostMapping("/{itemId}/comment")

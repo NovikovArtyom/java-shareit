@@ -94,5 +94,10 @@ public class ExceptionController {
         return new ErrorResponse("error: ", "Добавление комментария невозможно!");
     }
 
-
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handle(final ItemRequestNotFoundException e) {
+        log.error("Информация о заявке не найдена!");
+        return new ErrorResponse("error: ", "Информация о заявке не найдена!");
+    }
 }
