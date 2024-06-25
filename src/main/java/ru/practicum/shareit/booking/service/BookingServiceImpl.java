@@ -147,7 +147,7 @@ public class BookingServiceImpl implements BookingService {
         BookingEntity bookingEntity = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new BookingNotFoundException("Заявка о бронировании по дайнному Id не найдена!"));
         UserEntity owner = bookingEntity.getItem().getOwner();
-        if (owner == user) {
+        if (owner.equals(user)) {
             if (bookingEntity.getStatus() == BookingStatus.WAITING) {
                 if (approved) {
                     bookingEntity.setStatus(BookingStatus.APPROVED);
