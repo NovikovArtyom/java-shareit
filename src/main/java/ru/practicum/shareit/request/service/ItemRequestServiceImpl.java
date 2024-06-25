@@ -12,6 +12,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemRequestServiceImpl implements ItemRequestService {
@@ -34,10 +35,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
-    public Page<ItemRequest> getAllItemRequest(Long userId, Integer from, Integer size) {
+    public List<ItemRequest> getAllItemRequest(Long userId, Integer from, Integer size) {
         UserEntity user = userService.getUserById(userId);
         if (user != null) {
-            return itemRequestRepository.getAllByRequester_IdNotOrderByCreatedAsc(userId, PageRequest.of(from, size));
+            return itemRequestRepository.getAllByRequester_IdNotOrderByCreatedAsc(userId, PageRequest.of(from, size)).stream()
+                    .collect(Collectors.toList());
         } else {
             throw new UserNotFoundException("Пользователь не зарегистрирован!");
         }

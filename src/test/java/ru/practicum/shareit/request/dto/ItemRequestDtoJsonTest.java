@@ -8,8 +8,11 @@ import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.user.dto.UserResponseDto;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.COLLECTION;
 
 @JsonTest
 public class ItemRequestDtoJsonTest {
@@ -22,12 +25,14 @@ public class ItemRequestDtoJsonTest {
                 1L,
                 "Нужна дрель",
                 new UserResponseDto(1L),
-                LocalDateTime.of(2024, 12, 10, 22, 2)
+                LocalDateTime.of(2024, 12, 10, 22, 2),
+                Collections.emptyList()
         );
         JsonContent<ItemRequestDtoResponse> result = responseJson.write(itemRequestDtoResponse);
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("Нужна дрель");
         assertThat(result).extractingJsonPathNumberValue("$.requester.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.created").isEqualTo("2024-12-10T22:02:00");
+        assertThat(result).extractingJsonPathArrayValue("$.items").isEmpty();
     }
 }
