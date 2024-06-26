@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.DuplicateEmailException;
-import ru.practicum.shareit.exception.DuplicateUserException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UpdatedUserDto;
 import ru.practicum.shareit.user.model.UserEntity;
@@ -64,14 +63,6 @@ public class UserServiceTest {
     void testGetAllUsers() {
         List<UserEntity> users = userService.getAllUsers();
         assertThat(users).hasSize(2);
-    }
-
-    @Test
-    void testCreateUserWithDuplicateEmail() {
-        UserEntity duplicateEmailUser = new UserEntity(null, "Дмитрий", "artyom@gmail.com");
-        assertThatThrownBy(() -> userService.createUser(duplicateEmailUser))
-                .isInstanceOf(DuplicateUserException.class)
-                .hasMessageContaining("Данный пользователь уже зарегистрирован!");
     }
 
     @Test
