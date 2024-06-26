@@ -12,7 +12,6 @@ import ru.practicum.shareit.user.service.UserService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

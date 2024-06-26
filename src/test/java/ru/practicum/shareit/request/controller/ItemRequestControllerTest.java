@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -82,14 +81,14 @@ public class ItemRequestControllerTest {
 
     @Test
     void testGetItemRequestByUserId() throws Exception {
-        when (itemRequestService.getItemRequestByUserId(any(Long.class)))
+        when(itemRequestService.getItemRequestByUserId(any(Long.class)))
                 .thenReturn(List.of(firstItemRequest));
 
         mvc.perform(get("/requests")
-                .header("X-Sharer-User-Id", 1L)
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .header("X-Sharer-User-Id", 1L)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id", is(firstItemRequest.getId()), Long.class))
                 .andExpect(jsonPath("$[0].description", is(firstItemRequest.getDescription()), String.class))
@@ -101,7 +100,7 @@ public class ItemRequestControllerTest {
 
     @Test
     void testGetAllItemRequest() throws Exception {
-        when (itemRequestService.getAllItemRequest(1L, 0, 10))
+        when(itemRequestService.getAllItemRequest(1L, 0, 10))
                 .thenReturn(List.of(secondItemRequest));
 
         mvc.perform(get("/requests/all?from=0&size=10")
@@ -120,7 +119,7 @@ public class ItemRequestControllerTest {
 
     @Test
     void testGetItemRequestByRequestId() throws Exception {
-        when (itemRequestService.getItemRequestByRequestId(1L, 2L))
+        when(itemRequestService.getItemRequestByRequestId(1L, 2L))
                 .thenReturn(secondItemRequest);
 
         mvc.perform(get("/requests/2")

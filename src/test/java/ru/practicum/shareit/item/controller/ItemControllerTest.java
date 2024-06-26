@@ -10,7 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.LastAndNextBookingDto;
-import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.item.comments.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
@@ -18,7 +17,6 @@ import ru.practicum.shareit.item.dto.UpdatedItemDto;
 import ru.practicum.shareit.item.model.ItemEntity;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserResponseDto;
 import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -157,7 +155,7 @@ public class ItemControllerTest {
 
     @Test
     void testUpdateItem() throws Exception {
-        UpdatedItemDto updatedItemDto = new UpdatedItemDto(item.getId(), "Новая дрель Мокито" , "Обновленная Дрель Мокито", true);
+        UpdatedItemDto updatedItemDto = new UpdatedItemDto(item.getId(), "Новая дрель Мокито", "Обновленная Дрель Мокито", true);
         ItemDto updatedItemDtoResult = new ItemDto(item.getId(), "Обновленная Дрель", "Обновленная Дрель Мокито", true, userDto, null, null, null, null);
 
         when(itemService.updateItem(user.getId(), item.getId(), updatedItemDto))

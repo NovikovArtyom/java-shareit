@@ -8,11 +8,9 @@ import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.user.dto.UserResponseDto;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.COLLECTION;
 
 @JsonTest
 public class ItemRequestDtoJsonTest {
