@@ -51,7 +51,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader(USER_ID) Long userId, @RequestBody @Validated ItemDto itemDto) {
+    public ItemDto addItem(@RequestHeader(USER_ID) Long userId, @Validated @RequestBody ItemDto itemDto) {
         return ItemMapper.toItemDto(itemService.addItem(userId, itemDto.getRequestId(), ItemMapper.fromItemDtoToItemEntity(itemDto)));
     }
 

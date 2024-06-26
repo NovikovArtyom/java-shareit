@@ -62,12 +62,8 @@ public class ItemMapperTest {
         UserDto userDto = new UserDto();
         userDto.setId(1L);
 
-        ItemDto itemDto = new ItemDto();
-        itemDto.setId(3L);
-        itemDto.setName("Дрель");
-        itemDto.setDescription("Дрель Мокито");
-        itemDto.setAvailable(true);
-        itemDto.setOwner(userDto);
+        ItemDto itemDto = new ItemDto(3L, "Дрель", "Дрель Мокито", true,
+                userDto, null,null,null,null);
 
         ItemEntity item = ItemMapper.fromItemDtoToItemEntity(itemDto);
 
