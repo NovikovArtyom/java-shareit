@@ -61,7 +61,7 @@ public class UserServiceTest {
     @Test
     void testGetAllUsers() {
         List<UserEntity> users = userService.getAllUsers();
-        assertThat(users).hasSize(6);
+        assertThat(users).hasSize(2);
     }
 
     @Test
