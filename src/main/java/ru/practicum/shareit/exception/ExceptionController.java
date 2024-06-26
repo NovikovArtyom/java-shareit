@@ -74,6 +74,13 @@ public class ExceptionController {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(final DuplicateItemException e) {
+        log.error("Подтвердить бронирование можно только оно в статусе WAITING!");
+        return new ErrorResponse("error: ", "Указанный предмет уже зарегистрирован!");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handle(final RepeatedApproveException e) {
         log.error("Подтвердить бронирование можно только оно в статусе WAITING!");
         return new ErrorResponse("error: ", "Подтвердить бронирование можно только оно в статусе WAITING!");
