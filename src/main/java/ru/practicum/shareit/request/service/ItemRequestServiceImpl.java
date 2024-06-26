@@ -3,6 +3,8 @@ package ru.practicum.shareit.request.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -25,6 +27,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ItemRequest> getItemRequestByUserId(Long userId) {
         UserEntity user = userService.getUserById(userId);
         if (user != null) {
@@ -35,6 +38,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ItemRequest> getAllItemRequest(Long userId, Integer from, Integer size) {
         UserEntity user = userService.getUserById(userId);
         if (user != null) {
@@ -46,6 +50,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ItemRequest getItemRequestByRequestId(Long userId, Long requestId) {
         UserEntity user = userService.getUserById(userId);
         if (user != null) {
@@ -57,6 +62,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ItemRequest createItemRequest(Long userId, ItemRequest itemRequestEntity) {
         UserEntity user = userService.getUserById(userId);
         if (user != null) {
