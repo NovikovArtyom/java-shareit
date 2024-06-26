@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import ru.practicum.shareit.booking.model.BookingEntity;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.exception.BookingNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.model.UserEntity;
@@ -21,8 +22,10 @@ import ru.practicum.shareit.user.service.UserService;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
@@ -174,7 +177,7 @@ public class BookingServiceImplTest {
     public void testGetBookingsByBooker_UserNotFound() {
         when(userService.getUserById(bookerId)).thenThrow(new UserNotFoundException("User not found"));
 
-        Exception exception = org.junit.jupiter.api.Assertions.assertThrows(UserNotFoundException.class, () ->
+        Exception exception = assertThrows(UserNotFoundException.class, () ->
                 bookingService.getBookingsByBooker(bookerId, "ALL", from, size));
 
         assertThat(exception.getMessage()).isEqualTo("User not found");
@@ -301,9 +304,29 @@ public class BookingServiceImplTest {
     public void testGetBookingByOwner_UserNotFound() {
         when(userService.getUserById(bookerId)).thenThrow(new UserNotFoundException("User not found"));
 
-        Exception exception = org.junit.jupiter.api.Assertions.assertThrows(UserNotFoundException.class, () ->
+        Exception exception = assertThrows(UserNotFoundException.class, () ->
                 bookingService.getBookingByOwner(bookerId, "ALL", from, size));
 
         assertThat(exception.getMessage()).isEqualTo("User not found");
+    }
+
+    @Test
+    public void testGetBookingById_BookingNotFound() {
+        when(bookingRepository.findById(any())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(BookingNotFoundException.class, () ->
+                bookingService.getBookingById(1L, 1L));
+
+        assertThat(exception.getMessage()).isEqualTo("Бронь по заданному ID не найдена");
+    }
+
+    @Test
+    public void testApproveBooking_BookingNotFound() {
+        when(bookingRepository.findById(any())).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(BookingNotFoundException.class, () ->
+                bookingService.approveBooking(1L, 1L, true));
+
+        assertThat(exception.getMessage()).isEqualTo("Заявка о бронировании по дайнному Id не найдена!");
     }
 }

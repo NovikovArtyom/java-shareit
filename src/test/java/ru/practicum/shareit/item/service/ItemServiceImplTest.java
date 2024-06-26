@@ -6,6 +6,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserAccessException;
 import ru.practicum.shareit.item.dto.UpdatedItemDto;
@@ -14,6 +17,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.service.UserService;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -113,5 +117,25 @@ public class ItemServiceImplTest {
         assertEquals("Новая Дрель Мокито", updatedItem.getDescription());
         assertTrue(updatedItem.getAvailable());
         verify(itemRepository, times(1)).save(any(ItemEntity.class));
+    }
+
+    @Test
+    public void testSearch_Success() {
+        Page<ItemEntity> items = new PageImpl<>(List.of(item));
+        when(itemRepository.search(anyString(), any(PageRequest.class))).thenReturn(items);
+
+        List<ItemEntity> result = itemService.search(0, 10, "Дрель");
+
+        assertEquals(1, result.size());
+        assertEquals("Дрель", result.get(0).getName());
+        verify(itemRepository, times(1)).search(anyString(), any(PageRequest.class));
+    }
+
+    @Test
+    public void testSearch_EmptyText() {
+        List<ItemEntity> result = itemService.search(0, 10, "");
+
+        assertTrue(result.isEmpty());
+        verify(itemRepository, never()).search(anyString(), any(PageRequest.class));
     }
 }
