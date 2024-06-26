@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.ItemEntity;
 
-import java.util.List;
-
 @Repository
 public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
     Page<ItemEntity> findAllByOwner_Id(Long userId, Pageable pageable);

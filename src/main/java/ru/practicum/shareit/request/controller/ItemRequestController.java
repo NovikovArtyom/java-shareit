@@ -1,6 +1,5 @@
 package ru.practicum.shareit.request.controller;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +8,6 @@ import ru.practicum.shareit.request.dto.ItemRequestDtoResponse;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.stream.Collectors;
 
