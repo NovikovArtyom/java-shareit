@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import ru.practicum.shareit.booking.dto.LastAndNextBookingDto;
 import ru.practicum.shareit.item.comments.CommentResponseDto;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ItemDto {
     private Long id;
     @NonNull
