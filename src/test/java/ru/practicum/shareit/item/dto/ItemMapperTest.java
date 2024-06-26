@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.ItemEntity;
 import ru.practicum.shareit.request.model.ItemRequest;
@@ -8,7 +9,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.UserEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+@ActiveProfiles("test")
 public class ItemMapperTest {
 
     @Test

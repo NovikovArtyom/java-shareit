@@ -1,10 +1,11 @@
 package ru.practicum.shareit.exceptions;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 import ru.practicum.shareit.exception.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+@ActiveProfiles("test")
 public class ExceptionsTest {
 
     @Test
