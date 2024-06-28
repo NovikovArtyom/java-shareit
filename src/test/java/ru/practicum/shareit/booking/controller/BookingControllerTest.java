@@ -66,7 +66,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    void testGetBookingsByBooker() throws Exception {
+    void getBookingsByBookerStatusWaitingSuccess() throws Exception {
         when(bookingService.getBookingsByBooker(user.getId(), "WAITING", 0, 10))
                 .thenReturn(List.of(booking));
 
@@ -86,7 +86,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    void testGetBookingsByOwner() throws Exception {
+    void getBookingsByOwnerStatusWaitingSuccess() throws Exception {
         when(bookingService.getBookingByOwner(owner.getId(), "WAITING", 0, 10))
                 .thenReturn(List.of(booking));
 
@@ -106,7 +106,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    void testGetBookingById() throws Exception {
+    void getBookingByIdSuccess() throws Exception {
         when(bookingService.getBookingById(user.getId(), booking.getId()))
                 .thenReturn(booking);
 
@@ -126,7 +126,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    void testAddBooking() throws Exception {
+    void addBookingSuccess() throws Exception {
         BookingDto bookingRequestDto = new BookingDto(
                 null,
                 LocalDateTime.now().plusDays(3),
@@ -156,7 +156,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    void testApproveBooking() throws Exception {
+    void approveBookingSuccess() throws Exception {
         when(bookingService.approveBooking(owner.getId(), booking.getId(), true))
                 .thenReturn(booking);
 

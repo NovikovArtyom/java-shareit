@@ -45,7 +45,7 @@ public class ItemRequestRepositoryTest {
     }
 
     @Test
-    void testGetAllByRequester_Id() {
+    void getAllByRequester_IdSuccess() {
         ItemRequest request1 = createAndSaveItemRequest("Нужна дрель", user1);
         ItemRequest request2 = createAndSaveItemRequest("Нужна машина", user1);
 
@@ -55,7 +55,7 @@ public class ItemRequestRepositoryTest {
     }
 
     @Test
-    void testGetAllByRequester_IdNotOrderByCreatedAsc() {
+    void getAllByRequester_IdNotOrderByCreatedAscSuccess() {
         ItemRequest request1 = createAndSaveItemRequest("Нужна дрель", user1);
         ItemRequest request2 = createAndSaveItemRequest("Нужна машина", user2);
 

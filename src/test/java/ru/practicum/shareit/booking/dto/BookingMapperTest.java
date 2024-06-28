@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BookingMapperTest {
 
     @Test
-    void testToBookingDto() {
+    void toBookingDtoSuccess() {
         UserEntity bookerEntity = new UserEntity(1L, "Артём", "artyom@gmail.com");
         ItemEntity itemEntity = new ItemEntity(1L, "Дрель", "Дрель Мокито", true, bookerEntity, null);
         BookingEntity bookingEntity = new BookingEntity(1L,
@@ -40,7 +40,7 @@ public class BookingMapperTest {
     }
 
     @Test
-    void testToBookingEntity() {
+    void toBookingEntitySuccess() {
         BookingDto bookingDto = new BookingDto(1L,
                 LocalDateTime.of(2024, 12, 10, 10, 0),
                 LocalDateTime.of(2024, 12, 12, 10, 0),
@@ -60,7 +60,7 @@ public class BookingMapperTest {
     }
 
     @Test
-    void testToLastAndNextBookingDto() {
+    void toLastAndNextBookingDtoSuccess() {
         BookingEntity bookingEntity = new BookingEntity(1L,
                 LocalDateTime.of(2024, 12, 10, 10, 0),
                 LocalDateTime.of(2024, 12, 12, 10, 0),

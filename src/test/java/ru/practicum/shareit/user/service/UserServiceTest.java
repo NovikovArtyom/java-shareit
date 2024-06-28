@@ -45,13 +45,13 @@ public class UserServiceTest {
     }
 
     @Test
-    void testGetUserById() {
+    void getUserByIdSuccess() {
         UserEntity foundUser = userService.getUserById(savedUser.getId());
         assertThat(foundUser, equalTo(savedUser));
     }
 
     @Test
-    void testCreateUser() {
+    void createUserSuccess() {
         UserEntity newUser = new UserEntity(null, "Иван", "ivan@gmail.com");
         UserEntity savedNewUser = userService.createUser(newUser);
         assertThat(savedNewUser.getId(), notNullValue());
@@ -60,13 +60,13 @@ public class UserServiceTest {
     }
 
     @Test
-    void testGetAllUsers() {
+    void getAllUsersSuccess() {
         List<UserEntity> users = userService.getAllUsers();
         assertThat(users).hasSize(2);
     }
 
     @Test
-    void testUpdateUser() {
+    void updateUserSuccess() {
         UpdatedUserDto updatedUserDto = new UpdatedUserDto("Артём", "newemail@gmail.com");
 
         UserEntity updatedUser = userService.updateUser(savedUser.getId(), updatedUserDto);
@@ -75,7 +75,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testUpdateUserWithDuplicateEmail() {
+    void updateUserDuplicateEmailException() {
         UpdatedUserDto updatedUserDto = new UpdatedUserDto("Владимир", "vladimir@mail.ru");
 
         assertThatThrownBy(() -> userService.updateUser(savedUser.getId(), updatedUserDto))
@@ -84,7 +84,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testDeleteUser() {
+    void deleteUserSuccess() {
         userService.deleteUser(savedUser.getId());
         assertThatThrownBy(() -> userService.getUserById(savedUser.getId()))
                 .isInstanceOf(UserNotFoundException.class)
@@ -92,7 +92,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testDeleteUserNotFound() {
+    void deleteUserNotFound() {
         assertThatThrownBy(() -> userService.deleteUser(999L))
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessageContaining("Пользователь не зарегистрирован!");

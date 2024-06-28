@@ -60,7 +60,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    void testFindAllByOwner_Id() {
+    void findAllByOwner_IdSuccess() {
         Page<ItemEntity> itemsPage = itemRepository.findAllByOwner_Id(user1.getId(), PageRequest.of(0, 10));
 
         List<ItemEntity> items = itemsPage.getContent();
@@ -68,7 +68,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    void testSearch() {
+    void searchSuccess() {
         Page<ItemEntity> itemsPage = itemRepository.search("дрель", PageRequest.of(0, 10));
 
         List<ItemEntity> items = itemsPage.getContent();

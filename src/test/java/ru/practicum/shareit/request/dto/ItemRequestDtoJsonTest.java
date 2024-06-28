@@ -20,7 +20,7 @@ public class ItemRequestDtoJsonTest {
     private JacksonTester<ItemRequestDtoResponse> responseJson;
 
     @Test
-    void testItemRequestDtoResponse() throws Exception {
+    void parseToJsonItemRequestDtoResponse() throws Exception {
         ItemRequestDtoResponse itemRequestDtoResponse = new ItemRequestDtoResponse(
                 1L,
                 "Нужна дрель",

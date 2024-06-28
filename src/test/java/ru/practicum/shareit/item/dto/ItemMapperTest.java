@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ItemMapperTest {
 
     @Test
-    public void testToItemDto() {
+    public void toItemDtoSuccess() {
         UserEntity user = new UserEntity();
         user.setId(1L);
         user.setName("Артём");
@@ -41,7 +41,7 @@ public class ItemMapperTest {
     }
 
     @Test
-    public void testFromUpdatedItemDtoToItemEntity() {
+    public void fromUpdatedItemDtoToItemEntitySuccess() {
         UpdatedItemDto updatedItemDto = new UpdatedItemDto();
         updatedItemDto.setId(3L);
         updatedItemDto.setName("Новая Дрель");
@@ -59,7 +59,7 @@ public class ItemMapperTest {
     }
 
     @Test
-    public void testFromItemDtoToItemEntity() {
+    public void fromItemDtoToItemEntitySuccess() {
         UserDto userDto = new UserDto();
         userDto.setId(1L);
 
@@ -78,7 +78,7 @@ public class ItemMapperTest {
     }
 
     @Test
-    public void testToItemResponseDto() {
+    public void toItemResponseDtoSuccess() {
         ItemEntity item = new ItemEntity();
         item.setId(3L);
         item.setName("Дрель");
@@ -90,7 +90,7 @@ public class ItemMapperTest {
     }
 
     @Test
-    public void testToItemDtoForItemRequest() {
+    public void toItemDtoForItemRequestSuccess() {
         ItemRequest itemRequest = new ItemRequest();
         itemRequest.setId(2L);
 

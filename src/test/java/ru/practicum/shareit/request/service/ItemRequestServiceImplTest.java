@@ -44,7 +44,7 @@ public class ItemRequestServiceImplTest {
     }
 
     @Test
-    void testGetItemRequestByUserId() {
+    void getItemRequestByUserIdSuccess() {
         ItemRequest itemRequest = createAndSaveItemRequest(savedUser1.getId(), "Нужна дрель");
         TypedQuery<ItemRequest> query = em.createQuery("Select ir from ItemRequest ir where ir.requester.id = :userId",
                 ItemRequest.class);
@@ -55,7 +55,7 @@ public class ItemRequestServiceImplTest {
     }
 
     @Test
-    void testGetAllItemRequest() {
+    void getAllItemRequestSuccess() {
         ItemRequest firstItemRequest = createAndSaveItemRequest(savedUser1.getId(), "Нужна дрель");
         ItemRequest secondItemRequest = createAndSaveItemRequest(savedUser2.getId(), "Нужна машина");
 
@@ -68,7 +68,7 @@ public class ItemRequestServiceImplTest {
     }
 
     @Test
-    void testGetItemRequestByRequestId() {
+    void getItemRequestByRequestIdSuccess() {
         ItemRequest itemRequest = new ItemRequest(null, "Нужна дрель", null, null,
                 Collections.emptyList());
         ItemRequest savedItemRequest = itemRequestService.createItemRequest(user1.getId(), itemRequest);
@@ -80,7 +80,7 @@ public class ItemRequestServiceImplTest {
     }
 
     @Test
-    void testCreateItemRequest() {
+    void createItemRequestSuccess() {
         ItemRequest itemRequest = createAndSaveItemRequest(savedUser1.getId(), "Нужна дрель");
 
         TypedQuery<ItemRequest> query = em.createQuery("Select ir from ItemRequest ir where ir.description = :description",

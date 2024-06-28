@@ -63,7 +63,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingsByBooker_All() {
+    public void getBookingsByBookerStateAllSuccess() {
         String state = "ALL";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -81,7 +81,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingsByBooker_Current() {
+    public void getBookingsByBookerStateCurrentSuccess() {
         String state = "CURRENT";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -100,7 +100,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingsByBooker_Past() {
+    public void getBookingsByBookerStatePastSuccess() {
         String state = "PAST";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -119,7 +119,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingsByBooker_Future() {
+    public void getBookingsByBookerStateFutureSuccess() {
         String state = "FUTURE";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -138,7 +138,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingsByBooker_Waiting() {
+    public void getBookingsByBookerStateWaitingSuccess() {
         String state = "WAITING";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -157,7 +157,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingsByBooker_Rejected() {
+    public void getBookingsByBookerStateRejectedSuccess() {
         String state = "REJECTED";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -176,7 +176,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingsByBooker_UserNotFound() {
+    public void getBookingsByBookerUserNotFound() {
         when(userService.getUserById(bookerId)).thenThrow(new UserNotFoundException("User not found"));
 
         Exception exception = assertThrows(UserNotFoundException.class, () ->
@@ -186,7 +186,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingByOwner_All() {
+    public void getBookingByOwnerStateAllSuccess() {
         String state = "ALL";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -205,7 +205,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingByOwner_Current() {
+    public void getBookingByOwnerStateCurrentSuccess() {
         String state = "CURRENT";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -226,7 +226,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingByOwner_Past() {
+    public void getBookingByOwnerStatePastSuccess() {
         String state = "PAST";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -245,7 +245,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingByOwner_Future() {
+    public void getBookingByOwnerStateFutureSuccess() {
         String state = "FUTURE";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -264,7 +264,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingByOwner_Waiting() {
+    public void getBookingByOwnerStateWaitingSuccess() {
         String state = "WAITING";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -283,7 +283,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingByOwner_Rejected() {
+    public void getBookingByOwnerStateRejectedSuccess() {
         String state = "REJECTED";
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
         LocalDateTime now = LocalDateTime.now();
@@ -303,7 +303,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingByOwner_UserNotFound() {
+    public void getBookingByOwnerUserNotFound() {
         when(userService.getUserById(bookerId)).thenThrow(new UserNotFoundException("User not found"));
 
         Exception exception = assertThrows(UserNotFoundException.class, () ->
@@ -313,7 +313,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testGetBookingById_BookingNotFound() {
+    public void getBookingByIdBookingNotFound() {
         when(bookingRepository.findById(any())).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(BookingNotFoundException.class, () ->
@@ -323,7 +323,7 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void testApproveBooking_BookingNotFound() {
+    public void approveBookingBookingNotFound() {
         when(bookingRepository.findById(any())).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(BookingNotFoundException.class, () ->

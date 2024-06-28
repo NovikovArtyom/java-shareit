@@ -44,7 +44,7 @@ public class UserControllerTest {
     private final UserDto secondUserDto = new UserDto(2L, "Владимир", "vladimir@mail.ru");
 
     @Test
-    void testGetAllUsers() throws Exception {
+    void getAllUsersSuccess() throws Exception {
         when(userService.getAllUsers()).thenReturn(List.of(firstUser, secondUser));
 
         mvc.perform(get("/users")
@@ -60,7 +60,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testGetUserById() throws Exception {
+    void getUserByIdSuccess() throws Exception {
         when(userService.getUserById(1L)).thenReturn(firstUser);
 
         mvc.perform(get("/users/1")
@@ -73,7 +73,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testCreateUser() throws Exception {
+    void createUserSuccess() throws Exception {
         when(userService.createUser(any(UserEntity.class))).thenReturn(firstUser);
 
         mvc.perform(post("/users")
@@ -88,7 +88,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testUpdateUser() throws Exception {
+    void updateUserSuccess() throws Exception {
         when(userService.updateUser(any(Long.class), any())).thenReturn(firstUser);
 
         mvc.perform(patch("/users/1")
@@ -103,7 +103,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void testDeleteUser() throws Exception {
+    void deleteUserSuccess() throws Exception {
         mvc.perform(delete("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))

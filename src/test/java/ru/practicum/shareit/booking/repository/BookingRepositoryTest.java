@@ -56,7 +56,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindAllByBooker_Id() {
+    void findAllByBooker_IdSuccess() {
         bookingRepository.save(booking);
         Pageable pageable = PageRequest.of(0, 10);
         Page<BookingEntity> bookings = bookingRepository.findAllByBooker_Id(user.getId(), pageable);
@@ -66,7 +66,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindAllByBooker_IdAndStartBeforeAndEndAfter() {
+    void findAllByBooker_IdAndStartBeforeAndEndAfterSuccess() {
         bookingRepository.save(booking);
         Pageable pageable = PageRequest.of(0, 10);
         Page<BookingEntity> bookings = bookingRepository.findAllByBooker_IdAndStartBeforeAndEndAfter(user.getId(),
@@ -76,7 +76,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindAllByBooker_IdAndStartAfter() {
+    void findAllByBooker_IdAndStartAfterSuccess() {
         bookingRepository.save(booking);
         Pageable pageable = PageRequest.of(0, 10);
         Page<BookingEntity> bookings = bookingRepository.findAllByBooker_IdAndStartAfter(user.getId(), LocalDateTime.now(), pageable);
@@ -86,7 +86,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindAllByBooker_IdAndEndBefore() {
+    void findAllByBooker_IdAndEndBeforeSuccess() {
         bookingRepository.save(booking);
         Pageable pageable = PageRequest.of(0, 10);
         Page<BookingEntity> bookings = bookingRepository.findAllByBooker_IdAndEndBefore(user.getId(), LocalDateTime.now().plusDays(3), pageable);
@@ -96,7 +96,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindAllByBooker_IdAndStatusEquals() {
+    void findAllByBooker_IdAndStatusEqualsSuccess() {
         bookingRepository.save(booking);
         Pageable pageable = PageRequest.of(0, 10);
         Page<BookingEntity> bookings = bookingRepository.findAllByBooker_IdAndStatusEquals(user.getId(), BookingStatus.WAITING, pageable);
@@ -106,7 +106,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindAllByItem_Owner_IdOrderByStartDesc() {
+    void findAllByItem_Owner_IdOrderByStartDescSuccess() {
         bookingRepository.save(booking);
         Pageable pageable = PageRequest.of(0, 10);
         Page<BookingEntity> bookings = bookingRepository.findAllByItem_Owner_IdOrderByStartDesc(user.getId(), pageable);
@@ -116,7 +116,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStartDesc() {
+    void findAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStartDescSuccess() {
         bookingRepository.save(booking);
         Pageable pageable = PageRequest.of(0, 10);
         Page<BookingEntity> bookings = bookingRepository.findAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStartDesc(user.getId(),
@@ -127,7 +127,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindAllByItem_Owner_IdAndStartAfterOrderByStartDesc() {
+    void findAllByItem_Owner_IdAndStartAfterOrderByStartDescSuccess() {
         bookingRepository.save(booking);
         Pageable pageable = PageRequest.of(0, 10);
         Page<BookingEntity> bookings = bookingRepository.findAllByItem_Owner_IdAndStartAfterOrderByStartDesc(user.getId(), LocalDateTime.now(), pageable);
@@ -137,7 +137,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindAllByItem_Owner_IdAndEndBeforeOrderByStartDesc() {
+    void findAllByItem_Owner_IdAndEndBeforeOrderByStartDescSuccess() {
         bookingRepository.save(booking);
         Pageable pageable = PageRequest.of(0, 10);
         Page<BookingEntity> bookings = bookingRepository.findAllByItem_Owner_IdAndEndBeforeOrderByStartDesc(user.getId(),
@@ -148,7 +148,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc() {
+    void findAllByItem_Owner_IdAndStatusEqualsOrderByStartDescSuccess() {
         bookingRepository.save(booking);
         Pageable pageable = PageRequest.of(0, 10);
         Page<BookingEntity> bookings = bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc(user.getId(), BookingStatus.WAITING, pageable);
@@ -158,7 +158,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindTop1ByItem_IdAndStartBeforeAndStatusEqualsOrderByStartDesc() {
+    void findTop1ByItem_IdAndStartBeforeAndStatusEqualsOrderByStartDescSuccess() {
         bookingRepository.save(booking);
         BookingEntity result = bookingRepository.findTop1ByItem_IdAndStartBeforeAndStatusEqualsOrderByStartDesc(item.getId(), LocalDateTime.now().plusDays(1), BookingStatus.WAITING);
 
@@ -166,7 +166,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testFindTop1ByItem_IdAndStartAfterAndStatusEqualsOrderByStart() {
+    void findTop1ByItem_IdAndStartAfterAndStatusEqualsOrderByStartSuccess() {
         bookingRepository.save(booking);
         BookingEntity result = bookingRepository.findTop1ByItem_IdAndStartAfterAndStatusEqualsOrderByStart(item.getId(), LocalDateTime.now(), BookingStatus.WAITING);
 
@@ -174,7 +174,7 @@ public class BookingRepositoryTest {
     }
 
     @Test
-    void testExistsByItem_IdAndBooker_IdAndStatusEqualsAndStartBefore() {
+    void existsByItem_IdAndBooker_IdAndStatusEqualsAndStartBeforeSuccess() {
         bookingRepository.save(booking);
         Boolean exists = bookingRepository.existsByItem_IdAndBooker_IdAndStatusEqualsAndStartBefore(item.getId(),
                 user.getId(), BookingStatus.WAITING, LocalDateTime.now().plusDays(3));

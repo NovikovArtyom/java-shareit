@@ -61,7 +61,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    public void testUpdateItem_Success() {
+    public void updateItemSuccess() {
         when(userService.getUserById(anyLong())).thenReturn(user);
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(itemRepository.save(any(ItemEntity.class))).thenReturn(item);
@@ -75,7 +75,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    public void testUpdateItem_ItemNotFound() {
+    public void updateItemItemNotFound() {
         when(userService.getUserById(anyLong())).thenReturn(user);
         when(itemRepository.findById(anyLong())).thenReturn(Optional.empty());
 
@@ -88,7 +88,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    public void testUpdateItem_UserNotOwner() {
+    public void updateItemUserNotOwner() {
         UserEntity anotherUser = new UserEntity();
         anotherUser.setId(2L);
         item.setOwner(anotherUser);
@@ -105,7 +105,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    public void testUpdateItem_PartialUpdate() {
+    public void updateItemPartialUpdate() {
         updatedItemDto.setName(null);
         updatedItemDto.setAvailable(null);
 
@@ -122,7 +122,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    public void testSearch_Success() {
+    public void searchSuccess() {
         Page<ItemEntity> items = new PageImpl<>(List.of(item));
         when(itemRepository.search(anyString(), any(PageRequest.class))).thenReturn(items);
 
@@ -134,7 +134,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    public void testSearch_EmptyText() {
+    public void searchEmptyText() {
         List<ItemEntity> result = itemService.search(0, 10, "");
 
         assertTrue(result.isEmpty());

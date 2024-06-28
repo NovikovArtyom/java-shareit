@@ -27,7 +27,7 @@ public class ItemDtoJsonTest {
 
 
     @Test
-    void testItemDtoForItemRequest() throws Exception {
+    void parseToJsonItemDtoForItemRequest() throws Exception {
         ItemDtoForItemRequest itemDtoForItemRequest = new ItemDtoForItemRequest(
                 1L,
                 "Дрель",
@@ -46,7 +46,7 @@ public class ItemDtoJsonTest {
     }
 
     @Test
-    void testItemDto() throws Exception {
+    void parseToJsonItemDto() throws Exception {
         UserDto owner = new UserDto(1L, "Артём", "artyom@gmail.com");
         LastAndNextBookingDto lastBooking = new LastAndNextBookingDto(1L, 4L);
         LastAndNextBookingDto nextBooking = new LastAndNextBookingDto(4L, 5L);

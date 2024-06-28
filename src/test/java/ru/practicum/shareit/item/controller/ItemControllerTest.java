@@ -61,7 +61,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    void testGetAllItems() throws Exception {
+    void getAllItemsSuccess() throws Exception {
         mvc.perform(get("/items")
                         .header("X-Sharer-User-Id", 1L)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -82,7 +82,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    void testGetItemById() throws Exception {
+    void getItemByIdSuccess() throws Exception {
         when(itemService.getItemById(user.getId(), item.getId())).thenReturn(itemDto);
 
         mvc.perform(get("/items/{itemId}", item.getId())
@@ -105,7 +105,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    void testSearchItems() throws Exception {
+    void searchItemsSuccess() throws Exception {
         when(itemService.search(0, 10, "дрель")).thenReturn(List.of(item));
 
         mvc.perform(get("/items/search?text=дрель&from=0&size=10")
@@ -127,7 +127,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    void testAddItem() throws Exception {
+    void addItemSuccess() throws Exception {
         when(itemService.addItem(user.getId(), null, item)).thenReturn(item);
         ItemDto newItemDto = new ItemDto(null, "Новая Дрель", "Новая Дрель Мокито", true, userDto, null, null, null, null);
         ItemDto returnedItemDto = new ItemDto(2L, "Новая Дрель", "Новая Дрель Мокито", true, userDto, null, null, null, null);
@@ -156,7 +156,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    void testUpdateItem() throws Exception {
+    void updateItemSuccess() throws Exception {
         UpdatedItemDto updatedItemDto = new UpdatedItemDto(item.getId(), "Новая дрель Мокито", "Обновленная Дрель Мокито", true);
         ItemDto updatedItemDtoResult = new ItemDto(item.getId(), "Обновленная Дрель", "Обновленная Дрель Мокито", true, userDto, null, null, null, null);
 

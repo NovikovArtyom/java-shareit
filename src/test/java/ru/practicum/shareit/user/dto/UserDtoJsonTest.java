@@ -17,7 +17,7 @@ public class UserDtoJsonTest {
     private JacksonTester<UserDto> json;
 
     @Test
-    void testUserDto() throws Exception {
+    void parseToJsonUserDto() throws Exception {
         UserDto userDto = new UserDto(1L, "Артём", "artyom@gmail.com");
         JsonContent<UserDto> result = json.write(userDto);
 

@@ -42,21 +42,21 @@ public class ItemRequestServiceExceptionTest {
     }
 
     @Test
-    void testGetAllItemRequest_UserNotFound() {
+    void getAllItemRequestUserNotFound() {
         when(userService.getUserById(anyLong())).thenReturn(null);
 
         assertThrows(UserNotFoundException.class, () -> itemRequestService.getAllItemRequest(1L, 0, 10));
     }
 
     @Test
-    void testGetItemRequestByRequestId_UserNotFound() {
+    void getItemRequestByRequestIdUserNotFound() {
         when(userService.getUserById(anyLong())).thenReturn(null);
 
         assertThrows(UserNotFoundException.class, () -> itemRequestService.getItemRequestByRequestId(1L, 1L));
     }
 
     @Test
-    void testGetItemRequestByRequestId_ItemRequestNotFound() {
+    void getItemRequestByRequestIdItemRequestNotFound() {
         UserEntity user = new UserEntity();
         when(userService.getUserById(anyLong())).thenReturn(user);
         when(itemRequestRepository.findById(anyLong())).thenReturn(Optional.empty());
@@ -65,7 +65,7 @@ public class ItemRequestServiceExceptionTest {
     }
 
     @Test
-    void testCreateItemRequest_UserNotFound() {
+    void createItemRequestUserNotFound() {
         when(userService.getUserById(anyLong())).thenReturn(null);
 
         ItemRequest itemRequest = new ItemRequest();

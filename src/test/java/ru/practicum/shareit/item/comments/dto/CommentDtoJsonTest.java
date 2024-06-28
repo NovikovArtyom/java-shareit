@@ -33,7 +33,7 @@ public class CommentDtoJsonTest {
     private final Validator validator = validatorFactory.getValidator();
 
     @Test
-    void testCommentResponseDtoSerialization() throws Exception {
+    void parseToJsonCommentResponseDto() throws Exception {
         LocalDateTime created = LocalDateTime.of(2024, 6, 27, 10, 30);
         CommentResponseDto dto = new CommentResponseDto(1L, "Test comment", "John Doe", created);
 
@@ -46,7 +46,7 @@ public class CommentDtoJsonTest {
     }
 
     @Test
-    void testValidCommentRequestDto() {
+    void parseToJsonCommentRequestDto() {
         CommentRequestDto dto = new CommentRequestDto("Valid comment");
 
         Set<ConstraintViolation<CommentRequestDto>> violations = validator.validate(dto);

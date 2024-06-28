@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ExceptionsTest {
 
     @Test
-    void testBookingNotFoundException() {
+    void bookingNotFoundException() {
         String message = "Данная запись о бронировании не зарегистрирована!";
         BookingNotFoundException exception = new BookingNotFoundException(message);
 
@@ -21,7 +21,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testDuplicateEmailException() {
+    void duplicateEmailException() {
         String message = "Пользователь с данным email уже зарегистрирован!";
         DuplicateEmailException exception = new DuplicateEmailException(message);
 
@@ -33,7 +33,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testDuplicateItemException() {
+    void duplicateItemException() {
         String message = "Указанный предмет уже зарегистрирован!";
         DuplicateItemException exception = new DuplicateItemException(message);
 
@@ -45,7 +45,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testDuplicateUserException() {
+    void duplicateUserException() {
         String message = "Данный пользователь уже зарегистрирован!";
         DuplicateUserException exception = new DuplicateUserException(message);
 
@@ -57,7 +57,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testIncorrectCommentException() {
+    void incorrectCommentException() {
         String message = "Добавление комментария невозможно!";
         IncorrectCommentException exception = new IncorrectCommentException(message);
 
@@ -69,7 +69,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testIncorrectDateException() {
+    void incorrectDateException() {
         String message = "Дата старта аренды не может быть позднее даты конца аренды!";
         IncorrectDateException exception = new IncorrectDateException(message);
 
@@ -81,7 +81,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testIncorrectStatusException() {
+    void incorrectStatusException() {
         String state = "INVALID_STATE";
         IncorrectStatusException exception = new IncorrectStatusException(state);
 
@@ -92,7 +92,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testItemNotAvailableException() {
+    void itemNotAvailableException() {
         String message = "Данный товар уже забронирован!";
         ItemNotAvailableException exception = new ItemNotAvailableException(message);
 
@@ -104,7 +104,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testItemNotFoundException() {
+    void itemNotFoundException() {
         String message = "Данная вещь не зарегистрирована!";
         ItemNotFoundException exception = new ItemNotFoundException(message);
 
@@ -116,7 +116,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testItemRequestNotFoundException() {
+    void itemRequestNotFoundException() {
         String message = "Информация о заявке не найдена!";
         ItemRequestNotFoundException exception = new ItemRequestNotFoundException(message);
 
@@ -128,7 +128,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testRepeatedApproveException() {
+    void repeatedApproveException() {
         String message = "Подтвердить бронирование можно только оно в статусе WAITING!";
         RepeatedApproveException exception = new RepeatedApproveException(message);
 
@@ -140,7 +140,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testUserAccessException() {
+    void userAccessException() {
         String message = "Проблема с доступом к выполняемому действию!";
         UserAccessException exception = new UserAccessException(message);
 
@@ -152,7 +152,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testUserNotFoundException() {
+    void userNotFoundException() {
         String message = "Данный пользователь не зарегистрирован!";
         UserNotFoundException exception = new UserNotFoundException(message);
 
@@ -164,7 +164,7 @@ public class ExceptionsTest {
     }
 
     @Test
-    void testIncorrectStateException() {
+    void incorrectStateException() {
         String message = "Указаный параметр state некорректен!";
         IncorrectStateException exception = new IncorrectStateException(message);
 

@@ -62,7 +62,7 @@ public class ItemRequestControllerTest {
     private ItemRequestDtoRequest itemRequestDtoRequest = new ItemRequestDtoRequest("Купить дрель");
 
     @Test
-    void testCreateItemRequest() throws Exception {
+    void createItemRequestSuccess() throws Exception {
         when(itemRequestService.createItemRequest(any(Long.class), any(ItemRequest.class)))
                 .thenReturn(firstItemRequest);
 
@@ -82,7 +82,7 @@ public class ItemRequestControllerTest {
     }
 
     @Test
-    void testGetItemRequestByUserId() throws Exception {
+    void getItemRequestByUserIdSuccess() throws Exception {
         when(itemRequestService.getItemRequestByUserId(any(Long.class)))
                 .thenReturn(List.of(firstItemRequest));
 
@@ -101,7 +101,7 @@ public class ItemRequestControllerTest {
     }
 
     @Test
-    void testGetAllItemRequest() throws Exception {
+    void getAllItemRequestSuccess() throws Exception {
         when(itemRequestService.getAllItemRequest(1L, 0, 10))
                 .thenReturn(List.of(secondItemRequest));
 
@@ -120,7 +120,7 @@ public class ItemRequestControllerTest {
     }
 
     @Test
-    void testGetItemRequestByRequestId() throws Exception {
+    void getItemRequestByRequestIdSuccess() throws Exception {
         when(itemRequestService.getItemRequestByRequestId(1L, 2L))
                 .thenReturn(secondItemRequest);
 

@@ -58,34 +58,34 @@ public class BookingServiceTest {
     }
 
     @Test
-    void testGetBookingById() {
+    void getBookingByIdSuccess() {
         BookingEntity receivedBooking = bookingService.getBookingById(savedBooker.getId(), booking.getId());
         verifyBooking(receivedBooking, savedBooking);
     }
 
     @Test
-    void testGetBookingByIdWithIncorrectUser() {
+    void getBookingByIdUserAccessException() {
         assertThatThrownBy(() -> bookingService.getBookingById(999L, savedBooking.getId()))
                 .isInstanceOf(UserAccessException.class)
                 .hasMessageContaining("Просматривать данные о бронировании может только владелец вещи или автор брони!");
     }
 
     @Test
-    void testGetBookingsByBooker() {
+    void getBookingsByBookerSuccess() {
         List<BookingEntity> receivedBooking = bookingService.getBookingsByBooker(savedBooker.getId(), "WAITING", 0, 10);
         assertThat(receivedBooking).hasSize(1);
         verifyBooking(receivedBooking.get(0), savedBooking);
     }
 
     @Test
-    void testGetBookingsByOwner() {
+    void getBookingsByOwnerSuccess() {
         List<BookingEntity> receivedBooking = bookingService.getBookingByOwner(savedItemOwner.getId(), "WAITING", 0, 10);
         assertThat(receivedBooking).hasSize(1);
         verifyBooking(receivedBooking.get(0), savedBooking);
     }
 
     @Test
-    void testApproveBooking() {
+    void approveBookingSuccess() {
         BookingEntity receivedBooking = bookingService.approveBooking(savedItemOwner.getId(), savedBooking.getId(), true);
         assertThat(receivedBooking.getId(), notNullValue());
         assertThat(receivedBooking.getStart(), equalTo(savedBooking.getStart()));

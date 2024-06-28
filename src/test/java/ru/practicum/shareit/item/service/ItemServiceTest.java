@@ -60,20 +60,20 @@ public class ItemServiceTest {
     }
 
     @Test
-    void testGetAllItems() {
+    void getAllItemsSuccess() {
         List<ItemDto> items = itemService.getAllItems(savedOwner.getId(), 0, 10);
         assertThat(items).hasSize(1);
         verifyItem(items.get(0), savedItem);
     }
 
     @Test
-    void testGetItemById() {
+    void getItemByIdSuccess() {
         ItemDto receivedItem = itemService.getItemById(savedOwner.getId(), savedItem.getId());
         verifyItem(receivedItem, savedItem);
     }
 
     @Test
-    void testAddItem() {
+    void addItemSuccess() {
         ItemEntity newItem = new ItemEntity(null, "Перфоратор", "Перфоратор Бош", true, null, null);
         ItemEntity savedNewItem = itemService.addItem(savedOwner.getId(), null, newItem);
         assertThat(savedNewItem.getId(), notNullValue());
@@ -84,7 +84,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void testUpdateItem() {
+    void updateItemSuccess() {
         UpdatedItemDto updatedItemDto = new UpdatedItemDto();
         updatedItemDto.setName("Аккумуляторная дрель");
         updatedItemDto.setDescription("Аккумуляторная дрель Мокито");
@@ -97,7 +97,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void testUpdateItemWithIncorrectUser() {
+    void updateItemUserAccessException() {
         UpdatedItemDto updatedItemDto = new UpdatedItemDto();
         updatedItemDto.setName("Аккумуляторная дрель");
 

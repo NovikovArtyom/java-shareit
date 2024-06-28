@@ -65,7 +65,7 @@ public class CommentServiceTest {
     }
 
     @Test
-    public void testAddComment_Success() {
+    public void addCommentSuccess() {
         when(userService.getUserById(userId)).thenReturn(user);
         when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
         when(bookingRepository.existsByItem_IdAndBooker_IdAndStatusEqualsAndStartBefore(
@@ -83,7 +83,7 @@ public class CommentServiceTest {
     }
 
     @Test
-    public void testAddComment_ItemNotFound() {
+    public void addCommentItemNotFound() {
         when(userService.getUserById(userId)).thenReturn(user);
         when(itemRepository.findById(itemId)).thenReturn(Optional.empty());
 
@@ -98,7 +98,7 @@ public class CommentServiceTest {
     }
 
     @Test
-    public void testAddComment_IncorrectComment() {
+    public void addCommentIncorrectComment() {
         when(userService.getUserById(userId)).thenReturn(user);
         when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
         when(bookingRepository.existsByItem_IdAndBooker_IdAndStatusEqualsAndStartBefore(

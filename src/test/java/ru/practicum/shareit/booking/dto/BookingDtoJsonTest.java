@@ -26,7 +26,7 @@ public class BookingDtoJsonTest {
     private JacksonTester<LastAndNextBookingDto> jsonLastAndNextBooking;
 
     @Test
-    void testBookingResponseDto() throws Exception {
+    void parseToJsonBookingResponseDto() throws Exception {
         ItemResponseDto item = new ItemResponseDto(1L, "Дрель");
         UserResponseDto booker = new UserResponseDto(1L);
         BookingResponseDto bookingResponseDto = new BookingResponseDto(
@@ -50,7 +50,7 @@ public class BookingDtoJsonTest {
     }
 
     @Test
-    void testBookingDto() throws Exception {
+    void parseToJsonBookingDto() throws Exception {
         BookingDto bookingDto = new BookingDto(
                 1L,
                 LocalDateTime.of(2024, 12, 10, 22, 2),
@@ -71,7 +71,7 @@ public class BookingDtoJsonTest {
     }
 
     @Test
-    void testLastAndNextBookingDtoSerialization() throws Exception {
+    void parseToJsonLastAndNextBookingDto() throws Exception {
         LastAndNextBookingDto dto = new LastAndNextBookingDto(1L, 2L);
 
         JsonContent<LastAndNextBookingDto> result = jsonLastAndNextBooking.write(dto);

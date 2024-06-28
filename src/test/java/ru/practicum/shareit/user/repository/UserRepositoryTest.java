@@ -36,7 +36,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    void testExistsByEmail() {
+    void existsByEmailSuccess() {
         boolean exists = userRepository.existsByEmail("artyom@gmail.com");
         assertThat(exists).isTrue();
 
@@ -45,7 +45,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    void testFindByEmail() {
+    void findByEmailSuccess() {
         UserEntity foundUser = userRepository.findByEmail("artyom@gmail.com");
         assertThat(foundUser).isNotNull();
         assertThat(foundUser.getName()).isEqualTo("Артём");
