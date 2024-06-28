@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,7 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.UpdatedItemDto;
 import ru.practicum.shareit.item.model.ItemEntity;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.UserEntity;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -33,22 +36,26 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserService userService;
+    private final ItemRequestService itemRequestService;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
 
-    public ItemServiceImpl(ItemRepository itemRepository, UserService userService, BookingRepository bookingRepository, CommentRepository commentRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, UserService userService,
+                           ItemRequestService itemRequestService, BookingRepository bookingRepository,
+                           CommentRepository commentRepository) {
         this.itemRepository = itemRepository;
         this.userService = userService;
+        this.itemRequestService = itemRequestService;
         this.bookingRepository = bookingRepository;
         this.commentRepository = commentRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemDto> getAllItems(Long userId) {
+    public List<ItemDto> getAllItems(Long userId, Integer form, Integer size) {
         log.info(String.format("Получение списка вещей для пользователя с id = %d", userId));
         UserEntity user = userService.getUserById(userId);
-        List<ItemEntity> items = itemRepository.findAllByOwner_Id(user.getId());
+        Page<ItemEntity> items = itemRepository.findAllByOwner_Id(user.getId(), PageRequest.of(form, size));
         return items.stream().map(item -> {
             ItemDto itemDto = ItemMapper.toItemDto(item);
             BookingEntity lastBooking = bookingRepository.findTop1ByItem_IdAndStartBeforeAndStatusEqualsOrderByStartDesc(itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED);
@@ -90,10 +97,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ItemEntity> search(String text) {
+    public List<ItemEntity> search(Integer from, Integer size, String text) {
         log.info(String.format("Получение списка вещей подходящих по фильтрацию поиска. Текст для поиска: %s", text));
         if (!text.equals("")) {
-            return itemRepository.search(text);
+            return itemRepository.search(text, PageRequest.of(from, size)).stream().collect(Collectors.toList());
         } else {
             return new ArrayList<>();
         }
@@ -101,8 +108,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public ItemEntity addItem(Long userId, ItemEntity item) {
+    public ItemEntity addItem(Long userId, Long requestId, ItemEntity item) {
         log.info(String.format("Добавление новой вещи пользователем с id = %d", userId));
+        if (requestId != null) {
+            item.setRequest(itemRequestService.getItemRequestByRequestId(userId, requestId));
+        }
         item.setOwner(userService.getUserById(userId));
         return itemRepository.save(item);
     }

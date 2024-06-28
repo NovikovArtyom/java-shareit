@@ -26,7 +26,7 @@ public class ItemEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     @ToString.Exclude
     private UserEntity owner;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request_id", referencedColumnName = "id")
     @ToString.Exclude
     private ItemRequest request;
