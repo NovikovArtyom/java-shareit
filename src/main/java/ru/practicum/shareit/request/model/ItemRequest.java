@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import ru.practicum.shareit.item.model.ItemEntity;
 import ru.practicum.shareit.user.model.UserEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "requests")
@@ -22,6 +24,9 @@ public class ItemRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requestor_id")
     @ToString.Exclude
-    private UserEntity requestor;
+    private UserEntity requester;
     private LocalDateTime created;
+    @OneToMany(mappedBy = "request", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<ItemEntity> items;
 }

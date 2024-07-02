@@ -1,6 +1,9 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -46,23 +50,29 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingEntity> getBookingsByBooker(Long userId, String state) {
+    public List<BookingEntity> getBookingsByBooker(Long userId, String state, Integer from, Integer size) {
         log.info(String.format("Получение записи о бронировании типа %s для пользователя-арендатора с id = %d", state, userId));
         if (userService.getUserById(userId) != null) {
+            Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "start"));
             LocalDateTime now = LocalDateTime.now();
             switch (state) {
                 case "ALL":
-                    return bookingRepository.findAllByBooker_IdOrderByStartDesc(userId);
+                    return bookingRepository.findAllByBooker_Id(userId, pageable).stream().collect(Collectors.toList());
                 case "CURRENT":
-                    return bookingRepository.findAllByBooker_IdAndStartBeforeAndEndAfterOrderByStartDesc(userId, now, now);
+                    return bookingRepository.findAllByBooker_IdAndStartBeforeAndEndAfter(userId, now, now, pageable)
+                            .stream().collect(Collectors.toList());
                 case "PAST":
-                    return bookingRepository.findAllByBooker_IdAndEndBeforeOrderByStartDesc(userId, now);
+                    return bookingRepository.findAllByBooker_IdAndEndBefore(userId, now, pageable)
+                            .stream().collect(Collectors.toList());
                 case "FUTURE":
-                    return bookingRepository.findAllByBooker_IdAndStartAfterOrderByStartDesc(userId, now);
+                    return bookingRepository.findAllByBooker_IdAndStartAfter(userId, now, pageable)
+                            .stream().collect(Collectors.toList());
                 case "WAITING":
-                    return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.WAITING);
+                    return bookingRepository.findAllByBooker_IdAndStatusEquals(userId, BookingStatus.WAITING, pageable)
+                            .stream().collect(Collectors.toList());
                 case "REJECTED":
-                    return bookingRepository.findAllByBooker_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.REJECTED);
+                    return bookingRepository.findAllByBooker_IdAndStatusEquals(userId, BookingStatus.REJECTED, pageable)
+                            .stream().collect(Collectors.toList());
                 default:
                     throw new IncorrectStatusException(state);
             }
@@ -73,23 +83,29 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingEntity> getBookingByOwner(Long userId, String state) {
+    public List<BookingEntity> getBookingByOwner(Long userId, String state, Integer from, Integer size) {
         log.info(String.format("Получение записи о бронировании типа %s для пользователя-владельца с id = %d", state, userId));
         if (userService.getUserById(userId) != null) {
+            Pageable pageable = PageRequest.of(from, size);
             LocalDateTime now = LocalDateTime.now();
             switch (state) {
                 case "ALL":
-                    return bookingRepository.findAllByItem_Owner_IdOrderByStartDesc(userId);
+                    return bookingRepository.findAllByItem_Owner_IdOrderByStartDesc(userId, pageable).stream().collect(Collectors.toList());
                 case "CURRENT":
-                    return bookingRepository.findAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStartDesc(userId, now, now);
+                    return bookingRepository.findAllByItem_Owner_IdAndStartBeforeAndEndAfterOrderByStartDesc(userId, now, now, pageable)
+                            .stream().collect(Collectors.toList());
                 case "PAST":
-                    return bookingRepository.findAllByItem_Owner_IdAndEndBeforeOrderByStartDesc(userId, now);
+                    return bookingRepository.findAllByItem_Owner_IdAndEndBeforeOrderByStartDesc(userId, now, pageable)
+                            .stream().collect(Collectors.toList());
                 case "FUTURE":
-                    return bookingRepository.findAllByItem_Owner_IdAndStartAfterOrderByStartDesc(userId, now);
+                    return bookingRepository.findAllByItem_Owner_IdAndStartAfterOrderByStartDesc(userId, now, pageable)
+                            .stream().collect(Collectors.toList());
                 case "WAITING":
-                    return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.WAITING);
+                    return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.WAITING, pageable)
+                            .stream().collect(Collectors.toList());
                 case "REJECTED":
-                    return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.REJECTED);
+                    return bookingRepository.findAllByItem_Owner_IdAndStatusEqualsOrderByStartDesc(userId, BookingStatus.REJECTED, pageable)
+                            .stream().collect(Collectors.toList());
                 default:
                     throw new IncorrectStatusException(state);
             }
@@ -131,7 +147,7 @@ public class BookingServiceImpl implements BookingService {
         BookingEntity bookingEntity = bookingRepository.findById(bookingId).orElseThrow(() ->
                 new BookingNotFoundException("Заявка о бронировании по дайнному Id не найдена!"));
         UserEntity owner = bookingEntity.getItem().getOwner();
-        if (owner == user) {
+        if (owner.equals(user)) {
             if (bookingEntity.getStatus() == BookingStatus.WAITING) {
                 if (approved) {
                     bookingEntity.setStatus(BookingStatus.APPROVED);

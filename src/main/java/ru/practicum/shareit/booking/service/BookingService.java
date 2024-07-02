@@ -11,7 +11,7 @@ public interface BookingService {
 
     BookingEntity getBookingById(Long userId, Long bookingId);
 
-    List<BookingEntity> getBookingsByBooker(Long userId, String state);
+    List<BookingEntity> getBookingsByBooker(Long userId, String state, Integer from, Integer size);
 
-    List<BookingEntity> getBookingByOwner(Long userId, String state);
+    List<BookingEntity> getBookingByOwner(Long userId, String state, Integer from, Integer size);
 }
