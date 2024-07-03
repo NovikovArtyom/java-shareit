@@ -1,6 +1,7 @@
 package ru.practicum.shareit.server.user.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,12 +72,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public void deleteUser(Long userId) {
+    public UserEntity deleteUser(Long userId) {
         log.info(String.format("Удаление пользователя с id = %d", userId));
-        if (userRepository.existsById(userId)) {
-            userRepository.deleteById(userId);
-        } else {
-            throw new UserNotFoundException("Пользователь не зарегистрирован!");
-        }
+        UserEntity user = userRepository.findById(userId).orElseThrow(() ->
+                new UserNotFoundException("Пользователь не зарегистрирован!"));
+        userRepository.deleteById(userId);
+        return user;
     }
 }

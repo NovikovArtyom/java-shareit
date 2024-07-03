@@ -21,7 +21,8 @@ public class CommentController {
     public ResponseEntity<Object> addComment(@RequestHeader("X-Sharer-User-Id") Long userId,
                                              @Positive @PathVariable Long itemId,
                                              @RequestBody CommentRequestDto commentRequestDto) {
-
+        log.info("Add new comment with userId={}, itemId={}", userId, itemId);
+        return commentClient.addComment(userId, itemId, commentRequestDto);
     }
 
 

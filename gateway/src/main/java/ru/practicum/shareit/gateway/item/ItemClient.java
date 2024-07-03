@@ -50,7 +50,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> addItem(Long userId, ItemDto itemDto) {
-        return post("", itemDto);
+        return post("", userId, itemDto);
     }
 
     public ResponseEntity<Object> updateItem(Long userId, Long itemId, UpdatedItemDto updatedItemDto) {

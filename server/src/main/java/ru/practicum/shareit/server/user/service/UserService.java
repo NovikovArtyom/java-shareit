@@ -14,5 +14,5 @@ public interface UserService {
 
     UserEntity updateUser(Long userId, UpdatedUserDto updatedUserDto);
 
-    void deleteUser(Long userId);
+    UserEntity deleteUser(Long userId);
 }
