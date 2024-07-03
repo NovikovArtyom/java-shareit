@@ -6,9 +6,9 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.shareit.booking.dto.LastAndNextBookingDto;
-import ru.practicum.shareit.item.comments.CommentResponseDto;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.server.booking.dto.LastAndNextBookingDto;
+import ru.practicum.shareit.server.item.comments.CommentResponseDto;
+import ru.practicum.shareit.server.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -57,10 +57,10 @@ public class ItemDtoJsonTest {
                 "Мощная дрель",
                 true,
                 owner,
-                2L,
                 lastBooking,
                 nextBooking,
-                List.of(comment)
+                List.of(comment),
+                2L
         );
 
         JsonContent<ItemDto> result = jsonDto.write(itemDto);

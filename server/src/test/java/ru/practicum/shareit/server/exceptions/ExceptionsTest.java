@@ -2,7 +2,7 @@ package ru.practicum.shareit.server.exceptions;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.shareit.exception.*;
+import ru.practicum.shareit.server.exception.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 @ActiveProfiles("test")

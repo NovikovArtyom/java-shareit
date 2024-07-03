@@ -7,8 +7,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.shareit.item.model.ItemEntity;
-import ru.practicum.shareit.user.model.UserEntity;
+import ru.practicum.shareit.server.item.model.ItemEntity;
+import ru.practicum.shareit.server.user.model.UserEntity;
+
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -61,7 +62,7 @@ public class ItemRepositoryTest {
 
     @Test
     void findAllByOwner_IdSuccess() {
-        Page<ItemEntity> itemsPage = itemRepository.findAllByOwner_Id(user1.getId(), PageRequest.of(0, 10));
+        Page<ItemEntity> itemsPage = itemRepository.findAllByOwner_IdOrderById(user1.getId(), PageRequest.of(0, 10));
 
         List<ItemEntity> items = itemsPage.getContent();
         assertThat(items).hasSize(1).containsExactly(item1);

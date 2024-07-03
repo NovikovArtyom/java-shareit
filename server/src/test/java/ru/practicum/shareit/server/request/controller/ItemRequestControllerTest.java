@@ -9,10 +9,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.request.dto.ItemRequestDtoRequest;
-import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.request.service.ItemRequestService;
-import ru.practicum.shareit.user.model.UserEntity;
+import ru.practicum.shareit.server.request.dto.ItemRequestDtoRequest;
+import ru.practicum.shareit.server.request.model.ItemRequest;
+import ru.practicum.shareit.server.request.service.ItemRequestService;
+import ru.practicum.shareit.server.user.model.UserEntity;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;

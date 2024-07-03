@@ -49,7 +49,8 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@RequestHeader(USER_ID) Long userId, @Validated @RequestBody ItemDto itemDto) {
-        return ItemMapper.toItemDto(itemService.addItem(userId, itemDto.getRequestId(), ItemMapper.fromItemDtoToItemEntity(itemDto)));
+        Long itemRequestId = itemDto.getRequestId();
+        return ItemMapper.toItemDto(itemService.addItem(userId, itemRequestId, ItemMapper.fromItemDtoToItemEntity(itemDto)));
     }
 
     @PostMapping("/{itemId}/comment")

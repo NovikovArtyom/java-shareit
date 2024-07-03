@@ -7,16 +7,16 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.shareit.item.comments.CommentRequestDto;
-import ru.practicum.shareit.item.comments.CommentResponseDto;
+import ru.practicum.shareit.server.item.comments.CommentRequestDto;
+import ru.practicum.shareit.server.item.comments.CommentResponseDto;
 
+
+import java.time.LocalDateTime;
+import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;

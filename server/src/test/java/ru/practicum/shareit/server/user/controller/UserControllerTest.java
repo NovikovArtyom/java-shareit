@@ -9,9 +9,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.UserEntity;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.server.user.dto.UserDto;
+import ru.practicum.shareit.server.user.model.UserEntity;
+import ru.practicum.shareit.server.user.service.UserService;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -104,10 +104,13 @@ public class UserControllerTest {
 
     @Test
     void deleteUserSuccess() throws Exception {
+        when(userService.deleteUser(any(Long.class))).thenReturn(firstUser);
         mvc.perform(delete("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is("Пользователь с id = 1 удалён!")));
+                .andExpect(jsonPath("$.id", is(firstUser.getId()), Long.class))
+                .andExpect(jsonPath("$.name", is(firstUser.getName()), String.class))
+                .andExpect(jsonPath("$.email", is(firstUser.getEmail()), String.class));
     }
 }

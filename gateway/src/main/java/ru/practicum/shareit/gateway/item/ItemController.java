@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.gateway.item.dto.ItemDto;
 import ru.practicum.shareit.gateway.item.dto.UpdatedItemDto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -46,7 +47,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<Object> addItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                          @RequestBody ItemDto itemDto) {
+                                          @RequestBody @Valid ItemDto itemDto) {
         log.info("Add new item with userId={}", userId);
         return itemClient.addItem(userId, itemDto);
     }

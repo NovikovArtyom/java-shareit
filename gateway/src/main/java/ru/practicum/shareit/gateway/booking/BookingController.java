@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.gateway.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.gateway.booking.dto.BookingState;
+import ru.practicum.shareit.gateway.exception.IncorrectStatusException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -28,7 +29,7 @@ public class BookingController {
                                                       @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                       @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         BookingState state = BookingState.from(stateParam)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
+                .orElseThrow(() -> new IncorrectStatusException(stateParam));
         log.info("Get booking by booker with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
         return bookingClient.getBookingsByBooker(userId, state, from, size);
     }
@@ -39,7 +40,7 @@ public class BookingController {
                                                      @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                      @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         BookingState state = BookingState.from(stateParam)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
+                .orElseThrow(() -> new IncorrectStatusException(stateParam));
         log.info("Get booking by owner with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
         return bookingClient.getBookingByOwner(userId, state, from, size);
     }

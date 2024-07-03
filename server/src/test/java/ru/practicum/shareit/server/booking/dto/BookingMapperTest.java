@@ -2,12 +2,12 @@ package ru.practicum.shareit.server.booking.dto;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.shareit.booking.model.BookingEntity;
-import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.item.model.ItemEntity;
-import ru.practicum.shareit.user.dto.UserMapper;
-import ru.practicum.shareit.user.model.UserEntity;
+import ru.practicum.shareit.server.booking.model.BookingEntity;
+import ru.practicum.shareit.server.booking.model.BookingStatus;
+import ru.practicum.shareit.server.item.dto.ItemMapper;
+import ru.practicum.shareit.server.item.model.ItemEntity;
+import ru.practicum.shareit.server.user.dto.UserMapper;
+import ru.practicum.shareit.server.user.model.UserEntity;
 
 import java.time.LocalDateTime;
 

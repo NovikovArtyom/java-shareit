@@ -15,10 +15,10 @@ public class ItemMapper {
                 item.getDescription(),
                 item.getAvailable(),
                 UserMapper.toUserDto(item.getOwner()),
-                item.getRequest() != null ? item.getRequest().getId() : null,
                 null,
                 null,
-                null
+                null,
+                item.getRequest() != null ? item.getRequest().getId() : null
         );
     }
 

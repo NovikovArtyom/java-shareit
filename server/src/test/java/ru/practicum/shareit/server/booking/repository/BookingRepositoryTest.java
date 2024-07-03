@@ -8,10 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.shareit.booking.model.BookingEntity;
-import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.model.ItemEntity;
-import ru.practicum.shareit.user.model.UserEntity;
+import ru.practicum.shareit.server.booking.model.BookingEntity;
+import ru.practicum.shareit.server.booking.model.BookingStatus;
+import ru.practicum.shareit.server.item.model.ItemEntity;
+import ru.practicum.shareit.server.user.model.UserEntity;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;

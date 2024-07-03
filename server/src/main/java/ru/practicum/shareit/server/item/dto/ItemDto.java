@@ -20,8 +20,8 @@ public class ItemDto {
     @NonNull
     private Boolean available;
     private UserDto owner;
-    private Long requestId;
     private LastAndNextBookingDto lastBooking;
     private LastAndNextBookingDto nextBooking;
     private List<CommentResponseDto> comments;
+    private Long requestId;
 }

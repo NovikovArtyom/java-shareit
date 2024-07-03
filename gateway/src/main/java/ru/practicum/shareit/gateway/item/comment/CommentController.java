@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 @Controller
@@ -20,7 +21,7 @@ public class CommentController {
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> addComment(@RequestHeader("X-Sharer-User-Id") Long userId,
                                              @Positive @PathVariable Long itemId,
-                                             @RequestBody CommentRequestDto commentRequestDto) {
+                                             @RequestBody @Valid CommentRequestDto commentRequestDto) {
         log.info("Add new comment with userId={}, itemId={}", userId, itemId);
         return commentClient.addComment(userId, itemId, commentRequestDto);
     }

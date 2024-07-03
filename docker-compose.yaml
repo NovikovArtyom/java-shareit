@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:13.7-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=shareit
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+    ports:
+      - 5432:5432
+
+  db_test:
+    image: postgres:13.7-alpine
+    volumes:
+      - db_test_data:/var/lib/postgresql/data_test
+    environment:
+      - POSTGRES_DB=shareitTest
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+    ports:
+      - 5434:5434
+
+  server:
+    build: ./server
+    ports:
+      - "8083:8083"
+    depends_on:
+      - db
+      - db_test
+    environment:
+      - DB_NAME=shareit
+      - DB_NAME_TEST=shareitTest
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_PORT_TEST=5434
+
+    volumes:
+      - ./server/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - db_test
+      - server
+
+volumes:
+  db_data:
+  db_test_data:

@@ -55,21 +55,22 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getAllItems(Long userId, Integer form, Integer size) {
         log.info(String.format("Получение списка вещей для пользователя с id = %d", userId));
         UserEntity user = userService.getUserById(userId);
-        Page<ItemEntity> items = itemRepository.findAllByOwner_Id(user.getId(), PageRequest.of(form, size));
-        return items.stream().map(item -> {
-            ItemDto itemDto = ItemMapper.toItemDto(item);
-            BookingEntity lastBooking = bookingRepository.findTop1ByItem_IdAndStartBeforeAndStatusEqualsOrderByStartDesc(itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED);
-            BookingEntity nextBooking = bookingRepository.findTop1ByItem_IdAndStartAfterAndStatusEqualsOrderByStart(itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED);
-            if (lastBooking != null && nextBooking != null) {
-                itemDto.setLastBooking(BookingMapper.toLastAndNextBookingDto(lastBooking));
-                itemDto.setNextBooking(BookingMapper.toLastAndNextBookingDto(nextBooking));
-            }
-            List<CommentResponseDto> comments = commentRepository.findByItem_IdAndItem_Owner_Id(item.getId(), userId).stream()
-                    .map(CommentMapper::toDto)
-                    .collect(Collectors.toList());
-            itemDto.setComments(comments);
-            return itemDto;
-        }).collect(Collectors.toList());
+        Page<ItemEntity> items = itemRepository.findAllByOwner_IdOrderById(user.getId(), PageRequest.of(form, size));
+        return items.stream()
+                .map(item -> {
+                    ItemDto itemDto = ItemMapper.toItemDto(item);
+                    BookingEntity lastBooking = bookingRepository.findTop1ByItem_IdAndStartBeforeAndStatusEqualsOrderByStartDesc(itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED);
+                    BookingEntity nextBooking = bookingRepository.findTop1ByItem_IdAndStartAfterAndStatusEqualsOrderByStart(itemDto.getId(), LocalDateTime.now(), BookingStatus.APPROVED);
+                    if (lastBooking != null && nextBooking != null) {
+                        itemDto.setLastBooking(BookingMapper.toLastAndNextBookingDto(lastBooking));
+                        itemDto.setNextBooking(BookingMapper.toLastAndNextBookingDto(nextBooking));
+                    }
+                    List<CommentResponseDto> comments = commentRepository.findByItem_IdAndItem_Owner_Id(item.getId(), userId).stream()
+                            .map(CommentMapper::toDto)
+                            .collect(Collectors.toList());
+                    itemDto.setComments(comments);
+                    return itemDto;
+                }).collect(Collectors.toList());
     }
 
     @Override

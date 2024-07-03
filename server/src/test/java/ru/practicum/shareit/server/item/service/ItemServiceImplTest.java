@@ -10,13 +10,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.shareit.exception.ItemNotFoundException;
-import ru.practicum.shareit.exception.UserAccessException;
-import ru.practicum.shareit.item.dto.UpdatedItemDto;
-import ru.practicum.shareit.item.model.ItemEntity;
-import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.model.UserEntity;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.server.exception.ItemNotFoundException;
+import ru.practicum.shareit.server.exception.UserAccessException;
+import ru.practicum.shareit.server.item.dto.UpdatedItemDto;
+import ru.practicum.shareit.server.item.model.ItemEntity;
+import ru.practicum.shareit.server.item.repository.ItemRepository;
+import ru.practicum.shareit.server.user.model.UserEntity;
+import ru.practicum.shareit.server.user.service.UserService;
+
 
 import java.util.List;
 import java.util.Optional;

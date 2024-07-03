@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.user.model.UserEntity;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.server.request.model.ItemRequest;
+import ru.practicum.shareit.server.user.model.UserEntity;
+import ru.practicum.shareit.server.user.service.UserService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;

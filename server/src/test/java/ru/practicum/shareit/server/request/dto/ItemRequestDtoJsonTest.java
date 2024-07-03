@@ -6,7 +6,7 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.shareit.user.dto.UserResponseDto;
+import ru.practicum.shareit.server.user.dto.UserResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.Collections;

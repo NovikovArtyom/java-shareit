@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exception.DuplicateEmailException;
-import ru.practicum.shareit.exception.UserNotFoundException;
-import ru.practicum.shareit.user.dto.UpdatedUserDto;
-import ru.practicum.shareit.user.model.UserEntity;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.server.exception.DuplicateEmailException;
+import ru.practicum.shareit.server.exception.UserNotFoundException;
+import ru.practicum.shareit.server.user.dto.UpdatedUserDto;
+import ru.practicum.shareit.server.user.model.UserEntity;
+import ru.practicum.shareit.server.user.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 import java.util.List;

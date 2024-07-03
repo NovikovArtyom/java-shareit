@@ -6,12 +6,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ActiveProfiles;
-import ru.practicum.shareit.exception.ItemRequestNotFoundException;
-import ru.practicum.shareit.exception.UserNotFoundException;
-import ru.practicum.shareit.request.model.ItemRequest;
-import ru.practicum.shareit.request.repository.ItemRequestRepository;
-import ru.practicum.shareit.user.model.UserEntity;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.server.exception.ItemRequestNotFoundException;
+import ru.practicum.shareit.server.exception.UserNotFoundException;
+import ru.practicum.shareit.server.request.model.ItemRequest;
+import ru.practicum.shareit.server.request.repository.ItemRequestRepository;
+import ru.practicum.shareit.server.user.model.UserEntity;
+import ru.practicum.shareit.server.user.service.UserService;
 
 import java.util.Optional;
 
