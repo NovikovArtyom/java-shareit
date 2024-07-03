@@ -7,6 +7,8 @@ services:
     environment:
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_NAME=shareit
 
   server:
     build: ./server
@@ -19,6 +21,8 @@ services:
     environment:
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_NAME=shareit
 
   gateway:
     build: ./gateway
