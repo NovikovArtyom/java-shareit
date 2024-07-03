@@ -17,7 +17,7 @@ services:
   server:
     build: ./server
     ports:
-      - "8083:8083"
+      - "9090:9090"
     depends_on:
       - db
       - db_test
