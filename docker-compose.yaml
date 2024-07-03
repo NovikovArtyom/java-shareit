@@ -4,15 +4,9 @@ services:
     image: postgres:13.7-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-
-  db_test:
-    image: postgres:13.7-alpine
-    volumes:
-      - db_test_data:/var/lib/postgresql/data_test
-    ports:
-      - 5434:5434
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
 
   server:
     build: ./server
@@ -20,7 +14,6 @@ services:
       - "9090:9090"
     depends_on:
       - db
-      - db_test
 
     volumes:
       - ./server/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
@@ -31,7 +24,6 @@ services:
       - "8080:8080"
     depends_on:
       - db
-      - db_test
       - server
 
 volumes:
